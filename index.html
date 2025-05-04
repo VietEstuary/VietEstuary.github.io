@@ -161,4 +161,254 @@
         <p>&copy; 2025 Phòng Thiết Bị - Công ty Cổ phần Xây dựng Decofi. Tất cả các quyền được bảo lưu.</p>
     </footer>
 </body>
+    <!-- Chatbox HTML -->
+<div class="chat-toggle" onclick="toggleChat()">
+    💬
+</div>
+
+<div class="chatbox" id="chatbox">
+    <div class="chat-header">
+        Hỗ trợ trực tuyến
+        <span class="close-btn" onclick="toggleChat()">×</span>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+        <div style="padding: 10px; background-color: #f1f1f1; border-radius: 10px; margin-bottom: 10px;">
+            Xin chào! Tôi có thể giúp gì cho bạn về thiết bị xây dựng Decofi?
+        </div>
+    </div>
+    <div class="chat-input">
+        <input type="text" id="user-message" placeholder="Nhập tin nhắn...">
+        <button onclick="sendMessage()">Gửi</button>
+    </div>
+</div>
+
+<!-- CSS for the Chatbox -->
+<style>
+    .chatbox {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 320px;
+        height: 400px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 1000;
+    }
+    
+    .chat-header {
+        background-color: #1e3a8a;
+        color: white;
+        padding: 10px 15px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .close-btn {
+        cursor: pointer;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .close-btn:hover {
+        color: #ddd;
+    }
+    
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    
+    .chat-input {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #eee;
+    }
+    
+    .chat-input input {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px 0 0 4px;
+    }
+    
+    .chat-input button {
+        background-color: #1e3a8a;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+    }
+    
+    .chat-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #1e3a8a;
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 60px;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        z-index: 999;
+    }
+</style>
+
+<!-- JavaScript for Chatbox Functionality -->
+<script>
+    // Database of training data for the chatbot
+    const chatbotData = [
+        {
+            keywords: ["giá", "chi phí", "thuê", "mướn", "bao nhiêu"],
+            responses: [
+                "Để biết thông tin về giá cả và chi phí thuê thiết bị, vui lòng liên hệ với phòng kinh doanh theo số (028) 3123 4567.",
+                "Giá thuê thiết bị phụ thuộc vào loại thiết bị, thời gian thuê và địa điểm công trình. Vui lòng cung cấp thêm thông tin để chúng tôi báo giá chính xác nhất.",
+                "Chúng tôi cung cấp báo giá chi tiết sau khi đánh giá nhu cầu của dự án. Vui lòng gọi (028) 3123 4567 hoặc để lại email để nhận báo giá."
+            ]
+        },
+        {
+            keywords: ["thuê", "mướn", "cho thuê", "cung cấp"],
+            responses: [
+                "Công ty chúng tôi có dịch vụ cho thuê thiết bị xây dựng. Vui lòng cung cấp thông tin về dự án và thời gian cần thiết bị để chúng tôi tư vấn phương án phù hợp nhất.",
+                "Decofi cung cấp dịch vụ cho thuê đa dạng thiết bị xây dựng từ máy đào, máy ủi đến cần cẩu và xe tải ben. Bạn cần loại thiết bị nào?",
+                "Để thuê thiết bị, bạn cần cung cấp thông tin về dự án, địa điểm, thời gian và loại thiết bị. Chúng tôi sẽ lên phương án tối ưu nhất cho bạn."
+            ]
+        },
+        {
+            keywords: ["bảo trì", "sửa chữa", "bảo dưỡng", "hỏng"],
+            responses: [
+                "Đội ngũ kỹ thuật của chúng tôi luôn sẵn sàng hỗ trợ bảo trì và sửa chữa các thiết bị xây dựng. Vui lòng cung cấp thông tin chi tiết về thiết bị cần bảo trì.",
+                "Dịch vụ bảo trì của Decofi bao gồm bảo dưỡng định kỳ, sửa chữa khẩn cấp và thay thế phụ tùng. Bạn cần hỗ trợ loại nào?",
+                "Chúng tôi có đội ngũ kỹ thuật viên được đào tạo chuyên nghiệp, có thể xử lý hầu hết các vấn đề kỹ thuật cho thiết bị xây dựng. Vui lòng mô tả vấn đề bạn đang gặp phải."
+            ]
+        },
+        {
+            keywords: ["máy đào", "excavator", "máy xúc"],
+            responses: [
+                "Decofi cung cấp các loại máy đào từ 0.8m³ đến 2.0m³, bao gồm các thương hiệu Komatsu, Hitachi và Caterpillar. Bạn cần loại máy đào nào cho dự án của mình?",
+                "Máy đào của chúng tôi được bảo dưỡng thường xuyên và có đầy đủ giấy tờ kiểm định. Chúng tôi cung cấp cả người vận hành nếu bạn có nhu cầu.",
+                "Các máy đào của Decofi phù hợp với nhiều địa hình khác nhau, từ đất mềm đến đá cứng. Vui lòng cho biết mục đích sử dụng để chúng tôi tư vấn loại máy phù hợp."
+            ]
+        },
+        {
+            keywords: ["cần cẩu", "cẩu tháp", "crane"],
+            responses: [
+                "Chúng tôi có 5 cần cẩu tháp các loại từ thương hiệu Potain và Liebherr với tải trọng từ 10-20 tấn, phù hợp với nhiều loại công trình cao tầng.",
+                "Cần cẩu của Decofi đều được kiểm định an toàn nghiêm ngặt và có đội ngũ vận hành chuyên nghiệp. Bạn cần cần cẩu cho dự án nào?",
+                "Để thuê cần cẩu, bạn cần cung cấp thông tin về chiều cao công trình, tải trọng cần nâng và thời gian thuê. Chúng tôi sẽ tư vấn loại cần cẩu phù hợp nhất."
+            ]
+        },
+        {
+            keywords: ["địa chỉ", "văn phòng", "trụ sở", "liên hệ"],
+            responses: [
+                "Văn phòng Phòng Thiết Bị Decofi đặt tại địa chỉ: 123 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh. Điện thoại: (028) 3123 4567.",
+                "Bạn có thể liên hệ với chúng tôi qua email: thietbi@decofi.com.vn hoặc đến trực tiếp văn phòng tại 123 Nguyễn Văn Linh, Quận 7, TP. HCM.",
+                "Giờ làm việc của chúng tôi là: Thứ Hai - Thứ Sáu: 8:00 - 17:30. Địa chỉ: 123 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh."
+            ]
+        },
+        {
+            keywords: ["công trường", "dự án", "site", "công trình"],
+            responses: [
+                "Hiện tại Decofi đang có các công trường chính: Khu đô thị Golden Star (Q7), Tòa nhà Decofi Tower (Q1), và Khu nghỉ dưỡng Sea Breeze (Vũng Tàu). Bạn muốn biết thêm về công trường nào?",
+                "Các công trường của Decofi đều được trang bị đầy đủ thiết bị hiện đại và tuân thủ nghiêm ngặt các quy định về an toàn lao động.",
+                "Mỗi công trường của chúng tôi đều có cán bộ quản lý thiết bị chuyên trách, đảm bảo máy móc luôn hoạt động tốt và hiệu quả."
+            ]
+        },
+        {
+            keywords: ["an toàn", "safety", "bảo hộ", "tai nạn"],
+            responses: [
+                "Decofi luôn đặt an toàn lên hàng đầu. Tất cả thiết bị đều được kiểm định an toàn định kỳ và người vận hành được đào tạo chuyên nghiệp về quy trình an toàn.",
+                "Chúng tôi có bộ phận an toàn lao động riêng, giám sát việc tuân thủ các quy định an toàn khi vận hành thiết bị tại các công trường.",
+                "Tất cả thiết bị của Decofi đều có hồ sơ kiểm định an toàn đầy đủ. Chúng tôi cung cấp cả dịch vụ đào tạo an toàn cho người vận hành khi cần."
+            ]
+        }
+    ];
+
+    function toggleChat() {
+        var chatbox = document.getElementById('chatbox');
+        if (chatbox.style.display === 'flex') {
+            chatbox.style.display = 'none';
+        } else {
+            chatbox.style.display = 'flex';
+        }
+    }
+    
+    function sendMessage() {
+        var userInput = document.getElementById('user-message');
+        var message = userInput.value;
+        
+        if (message.trim() === '') return;
+        
+        var chatMessages = document.getElementById('chat-messages');
+        
+        // Add user message
+        var userDiv = document.createElement('div');
+        userDiv.style.padding = '10px';
+        userDiv.style.backgroundColor = '#e3f2fd';
+        userDiv.style.borderRadius = '10px';
+        userDiv.style.marginBottom = '10px';
+        userDiv.style.marginLeft = '40px';
+        userDiv.style.textAlign = 'right';
+        userDiv.innerText = message;
+        chatMessages.appendChild(userDiv);
+        
+        // Clear input
+        userInput.value = '';
+        
+        // Process response
+        setTimeout(function() {
+            var responseDiv = document.createElement('div');
+            responseDiv.style.padding = '10px';
+            responseDiv.style.backgroundColor = '#f1f1f1';
+            responseDiv.style.borderRadius = '10px';
+            responseDiv.style.marginBottom = '10px';
+            responseDiv.style.marginRight = '40px';
+            
+            // Find appropriate response based on keywords
+            let foundResponse = false;
+            const messageLower = message.toLowerCase();
+            
+            for (const data of chatbotData) {
+                for (const keyword of data.keywords) {
+                    if (messageLower.includes(keyword)) {
+                        // Randomly select one of the responses for this keyword set
+                        const randomIndex = Math.floor(Math.random() * data.responses.length);
+                        responseDiv.innerText = data.responses[randomIndex];
+                        foundResponse = true;
+                        break;
+                    }
+                }
+                if (foundResponse) break;
+            }
+            
+            // Default response if no keywords matched
+            if (!foundResponse) {
+                responseDiv.innerText = 'Cảm ơn bạn đã liên hệ. Vui lòng để lại số điện thoại hoặc email, chúng tôi sẽ liên hệ lại trong thời gian sớm nhất. Hoặc bạn có thể gọi trực tiếp đến (028) 3123 4567 để được hỗ trợ ngay.';
+            }
+            
+            chatMessages.appendChild(responseDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 1000);
+        
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Allow sending message with Enter key
+    document.getElementById('user-message').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+</script>
 </html>
