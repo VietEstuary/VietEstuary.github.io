@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatBox - Ứng Dụng Chat Realtime</title>
+    <title>Smart ChatBox - Ứng Dụng Chat Thông Minh</title>
     <style>
         * {
             margin: 0;
@@ -11,27 +11,45 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --dark-bg: #1a1a1a;
+            --dark-surface: #2d2d2d;
+            --dark-text: #e0e0e0;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode {
+            background: #0a0a0a;
         }
 
         .chat-container {
             background: #fff;
             width: 100%;
-            max-width: 800px;
-            height: 600px;
+            max-width: 900px;
+            height: 650px;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
             display: flex;
             flex-direction: column;
             overflow: hidden;
             animation: slideIn 0.5s ease-out;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .chat-container {
+            background: var(--dark-surface);
+            color: var(--dark-text);
         }
 
         @keyframes slideIn {
@@ -46,44 +64,65 @@
         }
 
         .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
-            padding: 20px;
-            text-align: center;
-            position: relative;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .chat-header h1 {
-            font-size: 24px;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-left h1 {
+            font-size: 22px;
             font-weight: 600;
         }
 
-        .online-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background: #4ade80;
-            border-radius: 50%;
-            margin-left: 10px;
-            animation: pulse 2s infinite;
+        .online-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
         }
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
-            }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .user-setup {
             padding: 20px;
             background: #f8f9fa;
             border-bottom: 1px solid #e9ecef;
+        }
+
+        .dark-mode .user-setup {
+            background: var(--dark-bg);
+            border-color: #444;
         }
 
         .user-setup.hidden {
@@ -97,6 +136,13 @@
             border-radius: 25px;
             font-size: 16px;
             transition: border-color 0.3s;
+            background: white;
+        }
+
+        .dark-mode .user-setup input {
+            background: var(--dark-surface);
+            border-color: #444;
+            color: var(--dark-text);
         }
 
         .user-setup input:focus {
@@ -108,7 +154,7 @@
             margin-top: 10px;
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
             border: none;
             border-radius: 25px;
@@ -126,6 +172,11 @@
             overflow-y: auto;
             padding: 20px;
             background: #f8f9fa;
+            scroll-behavior: smooth;
+        }
+
+        .dark-mode .chat-messages {
+            background: var(--dark-bg);
         }
 
         .message {
@@ -154,10 +205,11 @@
             padding: 12px 18px;
             border-radius: 20px;
             word-wrap: break-word;
+            position: relative;
         }
 
         .message.own .message-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
             border-bottom-right-radius: 5px;
         }
@@ -166,6 +218,37 @@
             background: #e9ecef;
             color: #333;
             border-bottom-left-radius: 5px;
+        }
+
+        .dark-mode .message.other .message-content {
+            background: var(--dark-surface);
+            color: var(--dark-text);
+        }
+
+        .message-reactions {
+            position: absolute;
+            bottom: -15px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+            background: white;
+            padding: 2px 8px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 12px;
+        }
+
+        .dark-mode .message-reactions {
+            background: var(--dark-surface);
+        }
+
+        .reaction {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .reaction:hover {
+            transform: scale(1.2);
         }
 
         .message-info {
@@ -178,21 +261,90 @@
             text-align: right;
         }
 
-        .chat-input {
+        .system-message {
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+            margin: 10px 0;
+            padding: 8px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 20px;
+        }
+
+        .chat-input-container {
             padding: 20px;
             background: white;
             border-top: 1px solid #e9ecef;
+        }
+
+        .dark-mode .chat-input-container {
+            background: var(--dark-surface);
+            border-color: #444;
+        }
+
+        .emoji-picker {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            grid-template-columns: repeat(8, 1fr);
+            gap: 5px;
+            max-width: 320px;
+        }
+
+        .dark-mode .emoji-picker {
+            background: var(--dark-surface);
+        }
+
+        .emoji-picker.show {
+            display: grid;
+        }
+
+        .emoji {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+
+        .emoji:hover {
+            background: #f0f0f0;
+        }
+
+        .dark-mode .emoji:hover {
+            background: var(--dark-bg);
+        }
+
+        .chat-input {
             display: flex;
             gap: 10px;
+            position: relative;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
         }
 
         .chat-input input {
-            flex: 1;
-            padding: 12px 20px;
+            width: 100%;
+            padding: 12px 50px 12px 20px;
             border: 2px solid #e9ecef;
             border-radius: 25px;
             font-size: 16px;
             transition: border-color 0.3s;
+            background: white;
+        }
+
+        .dark-mode .chat-input input {
+            background: var(--dark-bg);
+            border-color: #444;
+            color: var(--dark-text);
         }
 
         .chat-input input:focus {
@@ -200,22 +352,53 @@
             border-color: #667eea;
         }
 
-        .chat-input button {
+        .input-actions {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 5px;
+        }
+
+        .input-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.3s;
+            color: #666;
+        }
+
+        .input-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .dark-mode .input-btn:hover {
+            background: var(--dark-bg);
+        }
+
+        .chat-input button.send-btn {
             padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
             border: none;
             border-radius: 25px;
             font-size: 16px;
             cursor: pointer;
             transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .chat-input button:hover {
+        .chat-input button.send-btn:hover {
             transform: scale(1.05);
         }
 
-        .chat-input button:active {
+        .chat-input button.send-btn:active {
             transform: scale(0.95);
         }
 
@@ -225,6 +408,111 @@
             color: #6c757d;
             font-style: italic;
             min-height: 25px;
+        }
+
+        .typing-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: #666;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .command-suggestions {
+            position: absolute;
+            bottom: 60px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            padding: 10px;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .dark-mode .command-suggestions {
+            background: var(--dark-surface);
+        }
+
+        .command-suggestions.show {
+            display: block;
+        }
+
+        .command-item {
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .command-item:hover {
+            background: #f0f0f0;
+        }
+
+        .dark-mode .command-item:hover {
+            background: var(--dark-bg);
+        }
+
+        .command-item strong {
+            color: #667eea;
+        }
+
+        .command-item small {
+            color: #666;
+            margin-left: 10px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            animation: slideInRight 0.3s ease-out;
+            display: none;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .image-preview {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 10px;
+            margin-top: 10px;
+            cursor: pointer;
         }
 
         @media (max-width: 600px) {
@@ -237,13 +525,30 @@
             .message-content {
                 max-width: 85%;
             }
+
+            .emoji-picker {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
         }
     </style>
 </head>
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            <h1>ChatBox <span class="online-indicator"></span></h1>
+            <div class="header-left">
+                <h1>Smart ChatBox 🚀</h1>
+                <span class="online-count" id="onlineCount">👥 1 online</span>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" onclick="toggleTheme()" title="Chuyển đổi theme">
+                    <span id="themeIcon">🌙</span>
+                </button>
+                <button class="header-btn" onclick="toggleSound()" title="Bật/tắt âm thanh">
+                    <span id="soundIcon">🔔</span>
+                </button>
+            </div>
         </div>
         
         <div class="user-setup" id="userSetup">
@@ -255,18 +560,36 @@
         
         <div class="typing-indicator" id="typingIndicator"></div>
         
-        <div class="chat-input">
-            <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." disabled>
-            <button onclick="sendMessage()" id="sendButton" disabled>Gửi</button>
+        <div class="chat-input-container">
+            <div class="emoji-picker" id="emojiPicker"></div>
+            <div class="command-suggestions" id="commandSuggestions"></div>
+            
+            <div class="chat-input">
+                <div class="input-wrapper">
+                    <input type="text" id="messageInput" placeholder="Nhập tin nhắn hoặc / để xem lệnh..." disabled>
+                    <div class="input-actions">
+                        <button class="input-btn" onclick="toggleEmojiPicker()" title="Emoji">😊</button>
+                        <label for="imageInput" class="input-btn" title="Gửi ảnh">📷</label>
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                    </div>
+                </div>
+                <button onclick="sendMessage()" class="send-btn" id="sendButton" disabled>
+                    <span>Gửi</span>
+                    <span>➤</span>
+                </button>
+            </div>
         </div>
     </div>
+
+    <div class="notification" id="notification"></div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     
     <script>
-        // Cấu hình Firebase - Bạn cần thay thế bằng config của bạn
+       // Cấu hình Firebase - Bạn cần thay thế bằng config của bạn
         const firebaseConfig = {
           apiKey: "AIzaSyBjVDakNyX8FgavimOhlFgUKaArxuU3gvg",
           authDomain: "ndtvnproject.firebaseapp.com",
@@ -277,26 +600,70 @@
           appId: "1:39500587709:web:44f0c33abcd2fc2e854dd4",
           measurementId: "G-LQSLG393VM"
         };
-        
+
+
         // Khởi tạo Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        const storage = firebase.storage();
         
+        // State variables
         let username = '';
         let typingTimeout;
+        let soundEnabled = true;
+        let darkMode = false;
+        let onlineUsers = {};
+        let lastMessageTime = 0;
         
-        // Lưu trữ tin nhắn local khi chưa có Firebase
-        let localMessages = [];
-        let useLocalStorage = true;
+        // Emoji list
+        const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠', '😈', '👿', '👹', '👺', '🤡', '💩', '👻', '💀', '☠️', '👽', '👾', '🤖', '🎃', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾', '👋', '🤚', '🖐', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤝', '🙏', '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚛️', '🉑', '☢️', '☣️', '📴', '📳', '🈶', '🈚', '🈸', '🈺', '🈷️', '✴️', '🆚', '💮', '🉐', '㊙️', '㊗️', '🈴', '🈵', '🈹', '🈲', '🅰️', '🅱️', '🆎', '🆑', '🅾️', '🆘'];
         
-        // Kiểm tra xem Firebase đã được cấu hình chưa
-        if (firebaseConfig.apiKey === "YOUR_API_KEY") {
-            console.log("Đang sử dụng chế độ local. Hãy cấu hình Firebase để sử dụng realtime!");
-            useLocalStorage = true;
-            loadLocalMessages();
-        } else {
-            useLocalStorage = false;
-            setupFirebaseListeners();
+        // Commands
+        const commands = [
+            { cmd: '/help', desc: 'Hiển thị danh sách lệnh' },
+            { cmd: '/clear', desc: 'Xóa lịch sử chat của bạn' },
+            { cmd: '/online', desc: 'Xem ai đang online' },
+            { cmd: '/time', desc: 'Xem giờ hiện tại' },
+            { cmd: '/weather', desc: 'Xem thời tiết (demo)' },
+            { cmd: '/joke', desc: 'Kể một câu chuyện cười' },
+            { cmd: '/dice', desc: 'Tung xúc xắc' },
+            { cmd: '/coin', desc: 'Tung đồng xu' }
+        ];
+        
+        // Initialize
+        function init() {
+            setupEmojiPicker();
+            checkDarkModePreference();
+            
+            // Local storage fallback
+            if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+                console.log("Đang sử dụng chế độ local");
+                loadLocalMessages();
+            } else {
+                setupFirebaseListeners();
+            }
+        }
+        
+        function setupEmojiPicker() {
+            const picker = document.getElementById('emojiPicker');
+            emojis.forEach(emoji => {
+                const span = document.createElement('span');
+                span.className = 'emoji';
+                span.textContent = emoji;
+                span.onclick = () => insertEmoji(emoji);
+                picker.appendChild(span);
+            });
+        }
+        
+        function insertEmoji(emoji) {
+            const input = document.getElementById('messageInput');
+            input.value += emoji;
+            input.focus();
+            toggleEmojiPicker();
+        }
+        
+        function toggleEmojiPicker() {
+            document.getElementById('emojiPicker').classList.toggle('show');
         }
         
         function setUsername() {
@@ -308,8 +675,21 @@
                 document.getElementById('sendButton').disabled = false;
                 document.getElementById('messageInput').focus();
                 
-                // Hiển thị tin nhắn chào mừng
-                displaySystemMessage(`${username} đã tham gia phòng chat!`);
+                // Set user online
+                if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+                    database.ref(`users/${username}`).set({
+                        online: true,
+                        lastSeen: firebase.database.ServerValue.TIMESTAMP
+                    });
+                    
+                    database.ref(`users/${username}`).onDisconnect().set({
+                        online: false,
+                        lastSeen: firebase.database.ServerValue.TIMESTAMP
+                    });
+                }
+                
+                displaySystemMessage(`🎉 ${username} đã tham gia phòng chat!`);
+                playSound('join');
             }
         }
         
@@ -318,23 +698,93 @@
             const message = input.value.trim();
             
             if (message && username) {
+                // Check for commands
+                if (message.startsWith('/')) {
+                    handleCommand(message);
+                    input.value = '';
+                    return;
+                }
+                
+                // Anti-spam
+                const now = Date.now();
+                if (now - lastMessageTime < 500) {
+                    showNotification('⚠️ Vui lòng đợi một chút!');
+                    return;
+                }
+                lastMessageTime = now;
+                
                 const messageData = {
                     username: username,
                     message: message,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
+                    reactions: {}
                 };
                 
-                if (useLocalStorage) {
-                    // Lưu local
-                    localMessages.push(messageData);
-                    localStorage.setItem('chatMessages', JSON.stringify(localMessages));
+                if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+                    // Local mode
                     displayMessage(messageData, true);
                 } else {
-                    // Gửi lên Firebase
+                    // Firebase mode
                     database.ref('messages').push(messageData);
                 }
                 
                 input.value = '';
+                hideCommandSuggestions();
+            }
+        }
+        
+        function handleCommand(cmd) {
+            const command = cmd.toLowerCase();
+            
+            switch(command) {
+                case '/help':
+                    let helpText = '📋 Danh sách lệnh:\n';
+                    commands.forEach(c => {
+                        helpText += `${c.cmd} - ${c.desc}\n`;
+                    });
+                    displaySystemMessage(helpText);
+                    break;
+                    
+                case '/clear':
+                    document.getElementById('chatMessages').innerHTML = '';
+                    displaySystemMessage('🧹 Đã xóa lịch sử chat');
+                    break;
+                    
+                case '/online':
+                    const onlineList = Object.keys(onlineUsers).filter(u => onlineUsers[u].online);
+                    displaySystemMessage(`👥 Online: ${onlineList.join(', ') || 'Chỉ có bạn'}`);
+                    break;
+                    
+                case '/time':
+                    const time = new Date().toLocaleString('vi-VN');
+                    displaySystemMessage(`🕐 Thời gian: ${time}`);
+                    break;
+                    
+                case '/weather':
+                    displaySystemMessage('🌤️ Hôm nay: Nắng đẹp, 28°C (Demo)');
+                    break;
+                    
+                case '/joke':
+                    const jokes = [
+                        'Tại sao con cá không biết hát? Vì nó sống dưới nước! 🐟',
+                        'Quả gì to nhất? Quả đất! 🌍',
+                        'Con gì đầu dê mình ốc? Con dế! 🦗'
+                    ];
+                    displaySystemMessage('😄 ' + jokes[Math.floor(Math.random() * jokes.length)]);
+                    break;
+                    
+                case '/dice':
+                    const dice = Math.floor(Math.random() * 6) + 1;
+                    displaySystemMessage(`🎲 Bạn tung được: ${dice}`);
+                    break;
+                    
+                case '/coin':
+                    const coin = Math.random() > 0.5 ? 'Ngửa' : 'Sấp';
+                    displaySystemMessage(`🪙 Kết quả: ${coin}`);
+                    break;
+                    
+                default:
+                    displaySystemMessage('❌ Lệnh không tồn tại. Gõ /help để xem danh sách lệnh');
             }
         }
         
@@ -342,41 +792,133 @@
             const messagesDiv = document.getElementById('chatMessages');
             const messageEl = document.createElement('div');
             messageEl.className = `message ${isOwn || data.username === username ? 'own' : 'other'}`;
+            messageEl.id = `msg-${data.id || Date.now()}`;
             
             const time = new Date(data.timestamp).toLocaleTimeString('vi-VN', {
                 hour: '2-digit',
                 minute: '2-digit'
             });
             
+            // Check for image
+            let content = escapeHtml(data.message);
+            if (data.imageUrl) {
+                content += `<img src="${data.imageUrl}" class="image-preview" onclick="window.open('${data.imageUrl}', '_blank')">`;
+            }
+            
+            // Auto-link URLs
+            content = content.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+            
             messageEl.innerHTML = `
-                <div class="message-content">${escapeHtml(data.message)}</div>
+                <div class="message-content">
+                    ${content}
+                    ${data.reactions && Object.keys(data.reactions).length > 0 ? 
+                        `<div class="message-reactions">
+                            ${Object.entries(data.reactions).map(([emoji, users]) => 
+                                `<span class="reaction" onclick="toggleReaction('${data.id}', '${emoji}')">${emoji} ${users.length}</span>`
+                            ).join('')}
+                        </div>` : ''
+                    }
+                </div>
                 <div class="message-info">${escapeHtml(data.username)} • ${time}</div>
             `;
             
+            // Add reaction on double click
+            messageEl.querySelector('.message-content').ondblclick = () => showReactionPicker(data.id);
+            
             messagesDiv.appendChild(messageEl);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            // Play sound for new messages
+            if (!isOwn && data.username !== username && soundEnabled) {
+                playSound('message');
+            }
+            
+            // Show notification for mentions
+            if (data.message.includes(`@${username}`) && data.username !== username) {
+                showNotification(`💬 ${data.username} đã nhắc đến bạn!`);
+            }
         }
         
         function displaySystemMessage(message) {
             const messagesDiv = document.getElementById('chatMessages');
             const messageEl = document.createElement('div');
-            messageEl.style.textAlign = 'center';
-            messageEl.style.color = '#6c757d';
-            messageEl.style.fontSize = '14px';
-            messageEl.style.margin = '10px 0';
+            messageEl.className = 'system-message';
             messageEl.textContent = message;
             messagesDiv.appendChild(messageEl);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
         
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showNotification('⚠️ Ảnh phải nhỏ hơn 5MB!');
+                    return;
+                }
+                
+                showNotification('📤 Đang tải ảnh...');
+                
+                // For local mode
+                if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const messageData = {
+                            username: username,
+                            message: '📷 Đã gửi một ảnh',
+                            imageUrl: e.target.result,
+                            timestamp: Date.now()
+                        };
+                        displayMessage(messageData, true);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // Firebase Storage
+                    const storageRef = storage.ref(`images/${Date.now()}_${file.name}`);
+                    storageRef.put(file).then(snapshot => {
+                        snapshot.ref.getDownloadURL().then(url => {
+                            const messageData = {
+                                username: username,
+                                message: '📷 Đã gửi một ảnh',
+                                imageUrl: url,
+                                timestamp: Date.now()
+                            };
+                            database.ref('messages').push(messageData);
+                            showNotification('✅ Đã gửi ảnh!');
+                        });
+                    }).catch(error => {
+                        showNotification('❌ Lỗi tải ảnh!');
+                        console.error(error);
+                    });
+                }
+            }
+        }
+        
         function setupFirebaseListeners() {
-            // Lắng nghe tin nhắn mới
+            // Listen for new messages
             database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
                 const data = snapshot.val();
+                data.id = snapshot.key;
                 displayMessage(data);
             });
             
-            // Lắng nghe người đang gõ
+            // Listen for message updates (reactions)
+            database.ref('messages').limitToLast(50).on('child_changed', (snapshot) => {
+                const data = snapshot.val();
+                data.id = snapshot.key;
+                const existingMsg = document.getElementById(`msg-${data.id}`);
+                if (existingMsg) {
+                    existingMsg.remove();
+                    displayMessage(data);
+                }
+            });
+            
+            // Listen for online users
+            database.ref('users').on('value', (snapshot) => {
+                onlineUsers = snapshot.val() || {};
+                updateOnlineCount();
+            });
+            
+            // Listen for typing users
             database.ref('typing').on('value', (snapshot) => {
                 const typingUsers = snapshot.val() || {};
                 const typingList = Object.entries(typingUsers)
@@ -385,21 +927,121 @@
                 
                 const indicator = document.getElementById('typingIndicator');
                 if (typingList.length > 0) {
-                    indicator.textContent = `${typingList.join(', ')} đang nhập...`;
+                    indicator.innerHTML = `${typingList.join(', ')} đang nhập <span class="typing-dots"><span></span><span></span><span></span></span>`;
                 } else {
-                    indicator.textContent = '';
+                    indicator.innerHTML = '';
                 }
             });
         }
         
-        function loadLocalMessages() {
-            const saved = localStorage.getItem('chatMessages');
-            if (saved) {
-                localMessages = JSON.parse(saved);
-                localMessages.forEach(msg => {
-                    displayMessage(msg, msg.username === username);
+        function updateOnlineCount() {
+            const onlineCount = Object.values(onlineUsers).filter(u => u.online).length;
+            document.getElementById('onlineCount').textContent = `👥 ${onlineCount} online`;
+        }
+        
+        function showReactionPicker(messageId) {
+            const reactions = ['❤️', '😂', '😮', '😢', '😡', '👍'];
+            const picker = prompt(`Chọn reaction:\n${reactions.join(' ')}`);
+            if (picker && reactions.includes(picker)) {
+                toggleReaction(messageId, picker);
+            }
+        }
+        
+        function toggleReaction(messageId, emoji) {
+            if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+                const reactionRef = database.ref(`messages/${messageId}/reactions/${emoji}`);
+                reactionRef.transaction((current) => {
+                    current = current || [];
+                    const index = current.indexOf(username);
+                    if (index > -1) {
+                        current.splice(index, 1);
+                    } else {
+                        current.push(username);
+                    }
+                    return current.length > 0 ? current : null;
                 });
             }
+        }
+        
+        function toggleTheme() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('themeIcon').textContent = darkMode ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', darkMode);
+        }
+        
+        function checkDarkModePreference() {
+            darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeIcon').textContent = '☀️';
+            }
+        }
+        
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundIcon').textContent = soundEnabled ? '🔔' : '🔕';
+            localStorage.setItem('soundEnabled', soundEnabled);
+        }
+        
+        function playSound(type) {
+            if (!soundEnabled) return;
+            
+            const audio = new Audio();
+            switch(type) {
+                case 'message':
+                    audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTcJGWm98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT';
+                    break;
+                case 'join':
+                    audio.src = 'data:audio/wav;base64,UklGRvQEAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YdAEAAC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4';
+                    break;
+            }
+            audio.volume = 0.3;
+            audio.play().catch(e => console.log('Audio play failed:', e));
+        }
+        
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        function showCommandSuggestions() {
+            const input = document.getElementById('messageInput');
+            const suggestions = document.getElementById('commandSuggestions');
+            
+            if (input.value.startsWith('/')) {
+                const search = input.value.toLowerCase();
+                const filtered = commands.filter(cmd => cmd.cmd.startsWith(search));
+                
+                if (filtered.length > 0) {
+                    suggestions.innerHTML = filtered.map(cmd => 
+                        `<div class="command-item" onclick="selectCommand('${cmd.cmd}')">
+                            <strong>${cmd.cmd}</strong>
+                            <small>${cmd.desc}</small>
+                        </div>`
+                    ).join('');
+                    suggestions.classList.add('show');
+                } else {
+                    hideCommandSuggestions();
+                }
+            } else {
+                hideCommandSuggestions();
+            }
+        }
+        
+        function hideCommandSuggestions() {
+            document.getElementById('commandSuggestions').classList.remove('show');
+        }
+        
+        function selectCommand(cmd) {
+            document.getElementById('messageInput').value = cmd;
+            hideCommandSuggestions();
+            document.getElementById('messageInput').focus();
         }
         
         function escapeHtml(text) {
@@ -408,14 +1050,28 @@
             return div.innerHTML;
         }
         
-        // Xử lý sự kiện nhấn Enter
+        function loadLocalMessages() {
+            // Demo messages for local mode
+            const demoMessages = [
+                { username: 'Bot', message: 'Chào mừng đến với Smart ChatBox! 🎉', timestamp: Date.now() - 10000 },
+                { username: 'Bot', message: 'Gõ /help để xem danh sách lệnh', timestamp: Date.now() - 5000 }
+            ];
+            demoMessages.forEach(msg => displayMessage(msg));
+        }
+        
+        // Event listeners
         document.getElementById('messageInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
                 sendMessage();
             }
+        });
+        
+        document.getElementById('messageInput').addEventListener('input', (e) => {
+            showCommandSuggestions();
             
-            // Cập nhật trạng thái đang gõ (chỉ khi dùng Firebase)
-            if (!useLocalStorage && username) {
+            // Update typing status (Firebase only)
+            if (firebaseConfig.apiKey !== "YOUR_API_KEY" && username) {
                 database.ref(`typing/${username}`).set(true);
                 clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(() => {
@@ -430,12 +1086,30 @@
             }
         });
         
-        // Xóa trạng thái đang gõ khi rời trang
-        window.addEventListener('beforeunload', () => {
-            if (!useLocalStorage && username) {
-                database.ref(`typing/${username}`).remove();
+        // Click outside to close emoji picker
+        document.addEventListener('click', (e) => {
+            const emojiPicker = document.getElementById('emojiPicker');
+            const emojiBtn = e.target.closest('.input-btn');
+            
+            if (!emojiPicker.contains(e.target) && (!emojiBtn || emojiBtn.textContent !== '😊')) {
+                emojiPicker.classList.remove('show');
             }
         });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (firebaseConfig.apiKey !== "YOUR_API_KEY" && username) {
+                database.ref(`typing/${username}`).remove();
+                database.ref(`users/${username}/online`).set(false);
+            }
+        });
+        
+        // Check sound preference
+        soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+        document.getElementById('soundIcon').textContent = soundEnabled ? '🔔' : '🔕';
+        
+        // Initialize
+        init();
     </script>
 </body>
 </html>
