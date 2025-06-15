@@ -3,412 +3,438 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phòng Thiết Bị - Công ty Cổ phần Xây dựng Decofi</title>
+    <title>ChatBox - Ứng Dụng Chat Realtime</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-        
-        header {
-            background-color: #1e3a8a;
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-        }
-        
-        /* Navigation styles with dropdown */
-        nav {
-            background-color: #0f2557;
-            padding: 0;
-        }
-        
-        nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
+            align-items: center;
             justify-content: center;
+            padding: 20px;
         }
-        
-        nav ul li {
-            position: relative;
-            display: inline-block;
+
+        .chat-container {
+            background: #fff;
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
         }
-        
-        nav ul li a {
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            text-decoration: none;
-            font-weight: bold;
-            display: block;
-            padding: 15px 20px;
-        }
-        
-        nav ul li a:hover {
-            background-color: #2a4178;
-        }
-        
-        /* Dropdown menu styles */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #0f2557;
-            min-width: 200px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            left: 0;
-            text-align: left;
-        }
-        
-        .dropdown-content a {
-            color: white;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            font-weight: normal;
-            border-bottom: 1px solid #2a4178;
-        }
-        
-        .dropdown-content a:hover {
-            background-color: #2a4178;
-        }
-        
-        /* Show dropdown on hover */
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        
-        .container {
-            width: 80%;
-            margin: auto;
-            padding: 2rem 0;
-        }
-        
-        section {
-            margin-bottom: 2rem;
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        h1, h2, h3 {
-            color: #1e3a8a;
-        }
-        
-        footer {
-            background-color: #1e3a8a;
-            color: white;
+            padding: 20px;
             text-align: center;
-            padding: 1rem 0;
-            margin-top: 2rem;
+            position: relative;
+        }
+
+        .chat-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .online-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+            }
+        }
+
+        .user-setup {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .user-setup.hidden {
+            display: none;
+        }
+
+        .user-setup input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .user-setup input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .user-setup button {
+            margin-top: 10px;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .user-setup button:hover {
+            transform: scale(1.02);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.own {
+            text-align: right;
+        }
+
+        .message-content {
+            display: inline-block;
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            word-wrap: break-word;
+        }
+
+        .message.own .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.other .message-content {
+            background: #e9ecef;
+            color: #333;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-info {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .message.own .message-info {
+            text-align: right;
+        }
+
+        .chat-input {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .chat-input button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .chat-input button:hover {
+            transform: scale(1.05);
+        }
+
+        .chat-input button:active {
+            transform: scale(0.95);
+        }
+
+        .typing-indicator {
+            padding: 5px 20px;
+            font-size: 14px;
+            color: #6c757d;
+            font-style: italic;
+            min-height: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .chat-container {
+                height: 100vh;
+                max-width: 100%;
+                border-radius: 0;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Phòng Thiết Bị</h1>
-        <p>Công ty Cổ phần Xây dựng Decofi</p>
-    </header>
-    
-    <nav>
-        <ul>
-            <li><a href="index.html">Trang Chủ</a></li>
-            <li><a href="about.html">Về Chúng Tôi</a></li>
-            
-            <!-- Dropdown for Construction Sites -->
-            <li class="dropdown">
-                <a href="construction.html">Công Trường</a>
-                <div class="dropdown-content">
-                    <a href="construction-golden-star.html">Khu đô thị Golden Star</a>
-                    <a href="construction-decofi-tower.html">Tòa nhà Decofi Tower</a>
-                    <a href="construction-sea-breeze.html">Khu nghỉ dưỡng Sea Breeze</a>
-                    <a href="construction-sunrise-city.html">Chung cư Sunrise City</a>
-                    <a href="construction-all.html">Tất cả công trường</a>
-                </div>
-            </li>
-            
-            <!-- Dropdown for Equipment -->
-            <li class="dropdown">
-                <a href="equipment.html">Danh Mục Thiết Bị</a>
-                <div class="dropdown-content">
-                    <a href="equipment-lifting.html">Thiết Bị Nâng Hạ</a>
-                    <a href="equipment-excavation.html">Thiết Bị Đào Đắp</a>
-                    <a href="equipment-transport.html">Thiết Bị Vận Chuyển</a>
-                    <a href="equipment-support.html">Thiết Bị Phụ Trợ</a>
-                    <a href="equipment-all.html">Tất cả thiết bị</a>
-                </div>
-            </li>
-            
-            <li><a href="contact.html">Liên Hệ</a></li>
-        </ul>
-    </nav>
-    
-    <div class="container">
-        <section>
-            <h2>Chào mừng đến với Trang Web của Phòng Thiết Bị</h2>
-            <p>Đây là nơi cung cấp thông tin về các thiết bị và công trường của Công ty Cổ phần Xây dựng Decofi.</p>
-            <p>Sử dụng menu phía trên để xem thông tin chi tiết về công trường và danh mục thiết bị.</p>
-        </section>
-    </div>
-    
-    <footer>
-        <p>&copy; 2025 Phòng Thiết Bị - Công ty Cổ phần Xây dựng Decofi. Tất cả các quyền được bảo lưu.</p>
-    </footer>
-</body>
-    <!-- Chatbox HTML -->
-<div class="chat-toggle" onclick="toggleChat()">
-    💬
-</div>
-
-<div class="chatbox" id="chatbox">
-    <div class="chat-header">
-        Hỗ trợ trực tuyến
-        <span class="close-btn" onclick="toggleChat()">×</span>
-    </div>
-    <div class="chat-messages" id="chat-messages">
-        <div style="padding: 10px; background-color: #f1f1f1; border-radius: 10px; margin-bottom: 10px;">
-            Xin chào! Tôi có thể giúp gì cho bạn về thiết bị xây dựng Decofi?
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>ChatBox <span class="online-indicator"></span></h1>
+        </div>
+        
+        <div class="user-setup" id="userSetup">
+            <input type="text" id="usernameInput" placeholder="Nhập tên của bạn..." maxlength="20">
+            <button onclick="setUsername()">Bắt đầu chat</button>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages"></div>
+        
+        <div class="typing-indicator" id="typingIndicator"></div>
+        
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." disabled>
+            <button onclick="sendMessage()" id="sendButton" disabled>Gửi</button>
         </div>
     </div>
-    <div class="chat-input">
-        <input type="text" id="user-message" placeholder="Nhập tin nhắn...">
-        <button onclick="sendMessage()">Gửi</button>
-    </div>
-</div>
 
-<!-- CSS for the Chatbox -->
-<style>
-    .chatbox {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 320px;
-        height: 400px;
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        display: none;
-        flex-direction: column;
-        overflow: hidden;
-        z-index: 1000;
-    }
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
-    .chat-header {
-        background-color: #1e3a8a;
-        color: white;
-        padding: 10px 15px;
-        font-weight: bold;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .close-btn {
-        cursor: pointer;
-        font-size: 24px;
-        font-weight: bold;
-    }
-    
-    .close-btn:hover {
-        color: #ddd;
-    }
-    
-    .chat-messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px;
-    }
-    
-    .chat-input {
-        display: flex;
-        padding: 10px;
-        border-top: 1px solid #eee;
-    }
-    
-    .chat-input input {
-        flex: 1;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px 0 0 4px;
-    }
-    
-    .chat-input button {
-        background-color: #1e3a8a;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 0 4px 4px 0;
-        cursor: pointer;
-    }
-    
-    .chat-toggle {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: #1e3a8a;
-        color: white;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        text-align: center;
-        line-height: 60px;
-        font-size: 24px;
-        cursor: pointer;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        z-index: 999;
-    }
-</style>
+    <script>
+        // Cấu hình Firebase - Bạn cần thay thế bằng config của bạn
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
-<!-- JavaScript for Chatbox Functionality -->
-<script>
-    // Database of training data for the chatbot
-    const chatbotData = [
-        {
-            keywords: ["giá", "chi phí", "thuê", "mướn", "bao nhiêu"],
-            responses: [
-                "Để biết thông tin về giá cả và chi phí thuê thiết bị, vui lòng liên hệ với phòng kinh doanh theo số (028) 3123 4567.",
-                "Giá thuê thiết bị phụ thuộc vào loại thiết bị, thời gian thuê và địa điểm công trình. Vui lòng cung cấp thêm thông tin để chúng tôi báo giá chính xác nhất.",
-                "Chúng tôi cung cấp báo giá chi tiết sau khi đánh giá nhu cầu của dự án. Vui lòng gọi (028) 3123 4567 hoặc để lại email để nhận báo giá."
-            ]
-        },
-        {
-            keywords: ["thuê", "mướn", "cho thuê", "cung cấp"],
-            responses: [
-                "Công ty chúng tôi có dịch vụ cho thuê thiết bị xây dựng. Vui lòng cung cấp thông tin về dự án và thời gian cần thiết bị để chúng tôi tư vấn phương án phù hợp nhất.",
-                "Decofi cung cấp dịch vụ cho thuê đa dạng thiết bị xây dựng từ máy đào, máy ủi đến cần cẩu và xe tải ben. Bạn cần loại thiết bị nào?",
-                "Để thuê thiết bị, bạn cần cung cấp thông tin về dự án, địa điểm, thời gian và loại thiết bị. Chúng tôi sẽ lên phương án tối ưu nhất cho bạn."
-            ]
-        },
-        {
-            keywords: ["bảo trì", "sửa chữa", "bảo dưỡng", "hỏng"],
-            responses: [
-                "Đội ngũ kỹ thuật của chúng tôi luôn sẵn sàng hỗ trợ bảo trì và sửa chữa các thiết bị xây dựng. Vui lòng cung cấp thông tin chi tiết về thiết bị cần bảo trì.",
-                "Dịch vụ bảo trì của Decofi bao gồm bảo dưỡng định kỳ, sửa chữa khẩn cấp và thay thế phụ tùng. Bạn cần hỗ trợ loại nào?",
-                "Chúng tôi có đội ngũ kỹ thuật viên được đào tạo chuyên nghiệp, có thể xử lý hầu hết các vấn đề kỹ thuật cho thiết bị xây dựng. Vui lòng mô tả vấn đề bạn đang gặp phải."
-            ]
-        },
-        {
-            keywords: ["máy đào", "excavator", "máy xúc"],
-            responses: [
-                "Decofi cung cấp các loại máy đào từ 0.8m³ đến 2.0m³, bao gồm các thương hiệu Komatsu, Hitachi và Caterpillar. Bạn cần loại máy đào nào cho dự án của mình?",
-                "Máy đào của chúng tôi được bảo dưỡng thường xuyên và có đầy đủ giấy tờ kiểm định. Chúng tôi cung cấp cả người vận hành nếu bạn có nhu cầu.",
-                "Các máy đào của Decofi phù hợp với nhiều địa hình khác nhau, từ đất mềm đến đá cứng. Vui lòng cho biết mục đích sử dụng để chúng tôi tư vấn loại máy phù hợp."
-            ]
-        },
-        {
-            keywords: ["cần cẩu", "cẩu tháp", "crane"],
-            responses: [
-                "Chúng tôi có 5 cần cẩu tháp các loại từ thương hiệu Potain và Liebherr với tải trọng từ 10-20 tấn, phù hợp với nhiều loại công trình cao tầng.",
-                "Cần cẩu của Decofi đều được kiểm định an toàn nghiêm ngặt và có đội ngũ vận hành chuyên nghiệp. Bạn cần cần cẩu cho dự án nào?",
-                "Để thuê cần cẩu, bạn cần cung cấp thông tin về chiều cao công trình, tải trọng cần nâng và thời gian thuê. Chúng tôi sẽ tư vấn loại cần cẩu phù hợp nhất."
-            ]
-        },
-        {
-            keywords: ["địa chỉ", "văn phòng", "trụ sở", "liên hệ"],
-            responses: [
-                "Văn phòng Phòng Thiết Bị Decofi đặt tại địa chỉ: 123 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh. Điện thoại: (028) 3123 4567.",
-                "Bạn có thể liên hệ với chúng tôi qua email: thietbi@decofi.com.vn hoặc đến trực tiếp văn phòng tại 123 Nguyễn Văn Linh, Quận 7, TP. HCM.",
-                "Giờ làm việc của chúng tôi là: Thứ Hai - Thứ Sáu: 8:00 - 17:30. Địa chỉ: 123 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh."
-            ]
-        },
-        {
-            keywords: ["công trường", "dự án", "site", "công trình"],
-            responses: [
-                "Hiện tại Decofi đang có các công trường chính: Khu đô thị Golden Star (Q7), Tòa nhà Decofi Tower (Q1), và Khu nghỉ dưỡng Sea Breeze (Vũng Tàu). Bạn muốn biết thêm về công trường nào?",
-                "Các công trường của Decofi đều được trang bị đầy đủ thiết bị hiện đại và tuân thủ nghiêm ngặt các quy định về an toàn lao động.",
-                "Mỗi công trường của chúng tôi đều có cán bộ quản lý thiết bị chuyên trách, đảm bảo máy móc luôn hoạt động tốt và hiệu quả."
-            ]
-        },
-        {
-            keywords: ["an toàn", "safety", "bảo hộ", "tai nạn"],
-            responses: [
-                "Decofi luôn đặt an toàn lên hàng đầu. Tất cả thiết bị đều được kiểm định an toàn định kỳ và người vận hành được đào tạo chuyên nghiệp về quy trình an toàn.",
-                "Chúng tôi có bộ phận an toàn lao động riêng, giám sát việc tuân thủ các quy định an toàn khi vận hành thiết bị tại các công trường.",
-                "Tất cả thiết bị của Decofi đều có hồ sơ kiểm định an toàn đầy đủ. Chúng tôi cung cấp cả dịch vụ đào tạo an toàn cho người vận hành khi cần."
-            ]
-        }
-    ];
-
-    function toggleChat() {
-        var chatbox = document.getElementById('chatbox');
-        if (chatbox.style.display === 'flex') {
-            chatbox.style.display = 'none';
+        // Khởi tạo Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        let username = '';
+        let typingTimeout;
+        
+        // Lưu trữ tin nhắn local khi chưa có Firebase
+        let localMessages = [];
+        let useLocalStorage = true;
+        
+        // Kiểm tra xem Firebase đã được cấu hình chưa
+        if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+            console.log("Đang sử dụng chế độ local. Hãy cấu hình Firebase để sử dụng realtime!");
+            useLocalStorage = true;
+            loadLocalMessages();
         } else {
-            chatbox.style.display = 'flex';
+            useLocalStorage = false;
+            setupFirebaseListeners();
         }
-    }
-    
-    function sendMessage() {
-        var userInput = document.getElementById('user-message');
-        var message = userInput.value;
         
-        if (message.trim() === '') return;
+        function setUsername() {
+            const input = document.getElementById('usernameInput');
+            if (input.value.trim()) {
+                username = input.value.trim();
+                document.getElementById('userSetup').classList.add('hidden');
+                document.getElementById('messageInput').disabled = false;
+                document.getElementById('sendButton').disabled = false;
+                document.getElementById('messageInput').focus();
+                
+                // Hiển thị tin nhắn chào mừng
+                displaySystemMessage(`${username} đã tham gia phòng chat!`);
+            }
+        }
         
-        var chatMessages = document.getElementById('chat-messages');
-        
-        // Add user message
-        var userDiv = document.createElement('div');
-        userDiv.style.padding = '10px';
-        userDiv.style.backgroundColor = '#e3f2fd';
-        userDiv.style.borderRadius = '10px';
-        userDiv.style.marginBottom = '10px';
-        userDiv.style.marginLeft = '40px';
-        userDiv.style.textAlign = 'right';
-        userDiv.innerText = message;
-        chatMessages.appendChild(userDiv);
-        
-        // Clear input
-        userInput.value = '';
-        
-        // Process response
-        setTimeout(function() {
-            var responseDiv = document.createElement('div');
-            responseDiv.style.padding = '10px';
-            responseDiv.style.backgroundColor = '#f1f1f1';
-            responseDiv.style.borderRadius = '10px';
-            responseDiv.style.marginBottom = '10px';
-            responseDiv.style.marginRight = '40px';
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
             
-            // Find appropriate response based on keywords
-            let foundResponse = false;
-            const messageLower = message.toLowerCase();
-            
-            for (const data of chatbotData) {
-                for (const keyword of data.keywords) {
-                    if (messageLower.includes(keyword)) {
-                        // Randomly select one of the responses for this keyword set
-                        const randomIndex = Math.floor(Math.random() * data.responses.length);
-                        responseDiv.innerText = data.responses[randomIndex];
-                        foundResponse = true;
-                        break;
-                    }
+            if (message && username) {
+                const messageData = {
+                    username: username,
+                    message: message,
+                    timestamp: Date.now()
+                };
+                
+                if (useLocalStorage) {
+                    // Lưu local
+                    localMessages.push(messageData);
+                    localStorage.setItem('chatMessages', JSON.stringify(localMessages));
+                    displayMessage(messageData, true);
+                } else {
+                    // Gửi lên Firebase
+                    database.ref('messages').push(messageData);
                 }
-                if (foundResponse) break;
+                
+                input.value = '';
             }
-            
-            // Default response if no keywords matched
-            if (!foundResponse) {
-                responseDiv.innerText = 'Cảm ơn bạn đã liên hệ. Vui lòng để lại số điện thoại hoặc email, chúng tôi sẽ liên hệ lại trong thời gian sớm nhất. Hoặc bạn có thể gọi trực tiếp đến (028) 3123 4567 để được hỗ trợ ngay.';
-            }
-            
-            chatMessages.appendChild(responseDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }, 1000);
-        
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-    
-    // Allow sending message with Enter key
-    document.getElementById('user-message').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            sendMessage();
         }
-    });
-</script>
+        
+        function displayMessage(data, isOwn = false) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${isOwn || data.username === username ? 'own' : 'other'}`;
+            
+            const time = new Date(data.timestamp).toLocaleTimeString('vi-VN', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            messageEl.innerHTML = `
+                <div class="message-content">${escapeHtml(data.message)}</div>
+                <div class="message-info">${escapeHtml(data.username)} • ${time}</div>
+            `;
+            
+            messagesDiv.appendChild(messageEl);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function displaySystemMessage(message) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageEl = document.createElement('div');
+            messageEl.style.textAlign = 'center';
+            messageEl.style.color = '#6c757d';
+            messageEl.style.fontSize = '14px';
+            messageEl.style.margin = '10px 0';
+            messageEl.textContent = message;
+            messagesDiv.appendChild(messageEl);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function setupFirebaseListeners() {
+            // Lắng nghe tin nhắn mới
+            database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
+                const data = snapshot.val();
+                displayMessage(data);
+            });
+            
+            // Lắng nghe người đang gõ
+            database.ref('typing').on('value', (snapshot) => {
+                const typingUsers = snapshot.val() || {};
+                const typingList = Object.entries(typingUsers)
+                    .filter(([user, typing]) => user !== username && typing)
+                    .map(([user]) => user);
+                
+                const indicator = document.getElementById('typingIndicator');
+                if (typingList.length > 0) {
+                    indicator.textContent = `${typingList.join(', ')} đang nhập...`;
+                } else {
+                    indicator.textContent = '';
+                }
+            });
+        }
+        
+        function loadLocalMessages() {
+            const saved = localStorage.getItem('chatMessages');
+            if (saved) {
+                localMessages = JSON.parse(saved);
+                localMessages.forEach(msg => {
+                    displayMessage(msg, msg.username === username);
+                });
+            }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Xử lý sự kiện nhấn Enter
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+            
+            // Cập nhật trạng thái đang gõ (chỉ khi dùng Firebase)
+            if (!useLocalStorage && username) {
+                database.ref(`typing/${username}`).set(true);
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => {
+                    database.ref(`typing/${username}`).set(false);
+                }, 1000);
+            }
+        });
+        
+        document.getElementById('usernameInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                setUsername();
+            }
+        });
+        
+        // Xóa trạng thái đang gõ khi rời trang
+        window.addEventListener('beforeunload', () => {
+            if (!useLocalStorage && username) {
+                database.ref(`typing/${username}`).remove();
+            }
+        });
+    </script>
+</body>
 </html>
