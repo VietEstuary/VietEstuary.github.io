@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Quản Lý Kho Hàng</title>
+    <title>Phòng Thiết Bị - Trợ Lý AI</title>
     <style>
         * {
             margin: 0;
@@ -11,9 +11,24 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #22c55e;
+            --background: #f1f5f9;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: #f0f2f5;
+            background: var(--background);
+            color: var(--text);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -21,83 +36,231 @@
             padding: 20px;
         }
 
-        .chat-container {
+        .app-container {
             width: 100%;
-            max-width: 500px;
-            height: 700px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            height: 800px;
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
             display: flex;
-            flex-direction: column;
             overflow: hidden;
         }
 
-        .chat-header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background: #fafbfc;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
         }
 
-        .chat-header h1 {
-            font-size: 20px;
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header h2 {
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 5px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .chat-header p {
-            font-size: 14px;
-            opacity: 0.9;
+        .data-source {
+            margin: 20px;
+            padding: 16px;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
         }
 
-        .file-upload-section {
-            background: #f8f9fa;
-            padding: 15px;
-            border-bottom: 1px solid #e9ecef;
+        .data-source-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .data-source-icon {
+            font-size: 24px;
+        }
+
+        .data-source-title {
+            font-weight: 600;
+            color: #0369a1;
+        }
+
+        .data-source-path {
+            font-size: 13px;
+            color: #075985;
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+        .status-dot.error {
+            background: #ef4444;
+        }
+
+        .status-dot.loading {
+            background: #f59e0b;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .action-buttons {
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .file-status {
+        .action-btn:hover {
+            background: #f8fafc;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .action-btn-icon {
+            font-size: 20px;
+        }
+
+        .action-btn-text {
             flex: 1;
-            font-size: 14px;
-            color: #666;
         }
 
-        .file-status.loaded {
-            color: #10b981;
+        .action-btn-title {
             font-weight: 500;
-        }
-
-        .upload-btn {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
             font-size: 14px;
-            transition: background 0.3s;
         }
 
-        .upload-btn:hover {
-            background: #2563eb;
+        .action-btn-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .stats-container {
+            margin: 20px;
+            padding: 16px;
+            background: #f8faff;
+            border-radius: 8px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .bot-avatar {
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .bot-info h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .bot-status {
+            font-size: 14px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
-            background: #fafafa;
+            padding: 24px;
+            background: #f8fafc;
         }
 
         .message {
-            margin-bottom: 16px;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
+            margin-bottom: 20px;
             animation: fadeIn 0.3s ease;
         }
 
@@ -107,6 +270,23 @@
         }
 
         .message.user {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .message-wrapper {
+            max-width: 70%;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .message.user .message-wrapper {
             flex-direction: row-reverse;
         }
 
@@ -117,7 +297,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             flex-shrink: 0;
         }
 
@@ -130,63 +310,63 @@
         }
 
         .message-content {
-            max-width: 70%;
-        }
-
-        .message-bubble {
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-
-        .message.bot .message-bubble {
             background: white;
-            color: #333;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            padding: 14px 18px;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .message.user .message-bubble {
-            background: #3b82f6;
+        .message.user .message-content {
+            background: var(--primary);
             color: white;
             border-bottom-right-radius: 4px;
         }
 
+        .message.bot .message-content {
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-text {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
         .message-time {
             font-size: 12px;
-            color: #9ca3af;
-            margin-top: 4px;
+            color: var(--text-secondary);
+            margin-top: 6px;
         }
 
         .message.user .message-time {
-            text-align: right;
+            color: rgba(255,255,255,0.8);
         }
 
+        /* Tables in messages */
         .data-table {
-            margin: 8px 0;
+            margin: 12px 0;
             border-collapse: collapse;
             width: 100%;
             font-size: 13px;
             background: white;
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .data-table th, .data-table td {
-            border: 1px solid #e5e7eb;
-            padding: 8px 12px;
+            border: 1px solid var(--border);
+            padding: 10px 12px;
             text-align: left;
         }
 
         .data-table th {
-            background: #f3f4f6;
+            background: #f1f5f9;
             font-weight: 600;
-            color: #374151;
+            color: var(--text);
         }
 
-        .data-table tr:nth-child(even) {
-            background: #f9fafb;
+        .data-table tr:hover {
+            background: #f8fafc;
         }
 
         .highlight {
@@ -194,66 +374,126 @@
             font-weight: 500;
         }
 
-        .low-stock {
-            color: #ef4444;
-            font-weight: 600;
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
         }
 
-        .in-stock {
-            color: #10b981;
-            font-weight: 600;
+        .badge.available {
+            background: #d1fae5;
+            color: #065f46;
         }
 
-        .chat-input-section {
+        .badge.in-use {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge.maintenance {
+            background: #fed7aa;
+            color: #92400e;
+        }
+
+        .badge.broken {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Alert messages */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert.info {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #dbeafe;
+        }
+
+        .alert.success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert.warning {
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .alert.error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* Input area */
+        .chat-input-area {
             padding: 20px;
             background: white;
-            border-top: 1px solid #e9ecef;
+            border-top: 1px solid var(--border);
         }
 
-        .quick-questions {
+        .suggestions {
             display: flex;
             gap: 8px;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
         }
 
-        .quick-btn {
-            background: #eff6ff;
-            color: #3b82f6;
-            border: 1px solid #dbeafe;
-            padding: 6px 12px;
-            border-radius: 16px;
+        .suggestion-chip {
+            background: #f1f5f9;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
+            white-space: nowrap;
         }
 
-        .quick-btn:hover {
-            background: #dbeafe;
+        .suggestion-chip:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
             transform: scale(1.05);
         }
 
-        .input-container {
+        .input-wrapper {
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            align-items: center;
         }
 
         .chat-input {
             flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #e5e7eb;
+            padding: 14px 20px;
+            border: 2px solid var(--border);
             border-radius: 24px;
             font-size: 15px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
 
         .chat-input:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
         .send-btn {
-            background: #3b82f6;
+            background: var(--primary);
             color: white;
             border: none;
             width: 48px;
@@ -267,512 +507,395 @@
         }
 
         .send-btn:hover {
-            background: #2563eb;
+            background: var(--primary-dark);
             transform: scale(1.05);
         }
 
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
         .send-btn:disabled {
-            background: #9ca3af;
+            background: var(--text-secondary);
             cursor: not-allowed;
         }
 
-        .loading-dots {
-            display: inline-flex;
+        /* Loading animation */
+        .typing-indicator {
+            display: flex;
             gap: 4px;
+            padding: 14px 18px;
+            background: white;
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            width: fit-content;
         }
 
-        .loading-dots span {
+        .typing-dot {
             width: 8px;
             height: 8px;
-            background: #6b7280;
+            background: var(--text-secondary);
             border-radius: 50%;
-            animation: bounce 1.4s infinite;
+            animation: typing 1.4s infinite;
         }
 
-        .loading-dots span:nth-child(2) {
+        .typing-dot:nth-child(2) {
             animation-delay: 0.2s;
         }
 
-        .loading-dots span:nth-child(3) {
+        .typing-dot:nth-child(3) {
             animation-delay: 0.4s;
         }
 
-        @keyframes bounce {
+        @keyframes typing {
             0%, 60%, 100% { transform: translateY(0); }
             30% { transform: translateY(-10px); }
         }
 
-        .info-message {
-            background: #eff6ff;
-            border: 1px solid #dbeafe;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #1e40af;
-            margin: 8px 0;
-        }
-
-        .warning-message {
-            background: #fef3c7;
-            border: 1px solid #fde68a;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #92400e;
-            margin: 8px 0;
-        }
-
-        .success-message {
-            background: #d1fae5;
-            border: 1px solid #a7f3d0;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #065f46;
-            margin: 8px 0;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        @media (max-width: 600px) {
-            .chat-container {
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
                 height: 100vh;
                 max-width: 100%;
                 border-radius: 0;
             }
             
-            .message-bubble {
-                max-width: 85%;
+            .sidebar {
+                width: 100%;
+                height: 300px;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
             }
+            
+            .message-wrapper {
+                max-width: 90%;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-secondary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text);
         }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h1>🤖 Trợ Lý Quản Lý Kho</h1>
-            <p>Hỏi bất cứ điều gì về tồn kho của bạn</p>
-        </div>
-        
-        <div class="file-upload-section">
-            <div class="file-status" id="fileStatus">
-                📁 Chưa tải file dữ liệu kho
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 Phòng Thiết Bị - Kho Dữ Liệu</h2>
             </div>
-            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
-            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
-                Tải file Excel
-            </button>
-        </div>
-        
-        <div class="chat-messages" id="chatMessages">
-            <div class="message bot">
-                <div class="message-avatar">🤖</div>
-                <div class="message-content">
-                    <div class="message-bubble">
-                        Xin chào! Tôi là trợ lý quản lý kho của bạn. Vui lòng tải file Excel chứa dữ liệu kho hàng để bắt đầu.
-                        <div class="info-message">
-                            💡 File Excel cần có các cột: Mã hàng, Tên hàng, Số lượng tồn, Đơn vị, Giá trị...
-                        </div>
+            
+            <div class="data-source">
+                <div class="data-source-header">
+                    <span class="data-source-icon">💾</span>
+                    <span class="data-source-title">Nguồn dữ liệu</span>
+                </div>
+                <div class="data-source-path">Z:\21. COPPHA</div>
+                <div class="connection-status">
+                    <span class="status-dot" id="connectionStatus"></span>
+                    <span id="connectionText">Đang kết nối...</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn" onclick="loadData()">
+                    <span class="action-btn-icon">🔄</span>
+                    <div class="action-btn-text">
+                        <div class="action-btn-title">Tải lại dữ liệu</div>
+                        <div class="action-btn-desc">Cập nhật từ thư mục</div>
                     </div>
-                    <div class="message-time">Vừa xong</div>
+                </button>
+                
+                <button class="action-btn" onclick="showFileList()">
+                    <span class="action-btn-icon">📁</span>
+                    <div class="action-btn-text">
+                        <div class="action-btn-title">Xem danh sách file</div>
+                        <div class="action-btn-desc">Các file Excel/PDF</div>
+                    </div>
+                </button>
+                
+                <button class="action-btn" onclick="exportReport()">
+                    <span class="action-btn-icon">📊</span>
+                    <div class="action-btn-text">
+                        <div class="action-btn-title">Xuất báo cáo</div>
+                        <div class="action-btn-desc">Tạo file tổng hợp</div>
+                    </div>
+                </button>
+            </div>
+            
+            <div class="stats-container" id="statsContainer">
+                <div class="stat-item">
+                    <span class="stat-label">Tổng file dữ liệu:</span>
+                    <span class="stat-value" id="totalFiles">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Tổng thiết bị:</span>
+                    <span class="stat-value" id="totalEquipment">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Phòng/Khu vực:</span>
+                    <span class="stat-value" id="totalRooms">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Cập nhật lần cuối:</span>
+                    <span class="stat-value" id="lastUpdate">-</span>
                 </div>
             </div>
         </div>
         
-        <div class="chat-input-section">
-            <div class="quick-questions" id="quickQuestions" style="display: none;">
-                <button class="quick-btn" onclick="askQuickQuestion('Tổng số mặt hàng trong kho?')">Tổng mặt hàng</button>
-                <button class="quick-btn" onclick="askQuickQuestion('Hàng nào sắp hết?')">Hàng sắp hết</button>
-                <button class="quick-btn" onclick="askQuickQuestion('Giá trị tồn kho?')">Giá trị kho</button>
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <div class="bot-avatar">🤖</div>
+                <div class="bot-info">
+                    <h1>Trợ Lý Phòng Thiết Bị AI</h1>
+                    <div class="bot-status">
+                        <span class="status-indicator"></span>
+                        <span id="botStatus">Sẵn sàng hỗ trợ</span>
+                    </div>
+                </div>
             </div>
             
-            <div class="input-container">
-                <input type="text" 
-                       id="chatInput" 
-                       class="chat-input" 
-                       placeholder="Hỏi về tồn kho..." 
-                       disabled>
-                <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-                    </svg>
-                </button>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-wrapper">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                Xin chào! Tôi là trợ lý AI của Phòng Thiết Bị. Tôi có thể giúp bạn:
+                                <ul style="margin-top: 8px; margin-left: 20px;">
+                                    <li>Tra cứu thông tin thiết bị từ kho dữ liệu</li>
+                                    <li>Kiểm tra tình trạng và vị trí thiết bị</li>
+                                    <li>Tìm kiếm theo mã, tên, phòng</li>
+                                    <li>Thống kê và báo cáo thiết bị</li>
+                                    <li>Tra cứu lịch sử bảo trì</li>
+                                </ul>
+                                <div class="alert info" style="margin-top: 12px;">
+                                    💡 Đang kết nối với thư mục dữ liệu Z:\21. COPPHA
+                                </div>
+                            </div>
+                            <div class="message-time">Vừa xong</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input-area">
+                <div class="suggestions" id="suggestions">
+                    <button class="suggestion-chip" onclick="askQuestion('Có bao nhiêu thiết bị?')">Tổng số thiết bị</button>
+                    <button class="suggestion-chip" onclick="askQuestion('Thiết bị phòng họp')">Thiết bị phòng họp</button>
+                    <button class="suggestion-chip" onclick="askQuestion('Máy tính còn bảo hành')">Máy còn bảo hành</button>
+                    <button class="suggestion-chip" onclick="askQuestion('Thiết bị cần sửa chữa')">Cần sửa chữa</button>
+                </div>
+                
+                <div class="input-wrapper">
+                    <input type="text" 
+                           id="chatInput" 
+                           class="chat-input" 
+                           placeholder="Hỏi về thiết bị, phòng, tình trạng..." 
+                           >
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <script>
-        // Global variables
-        let inventoryData = [];
-        let headers = [];
+        // Global data storage
+        let allData = {
+            equipment: [],      // All equipment data
+            files: [],         // Files info
+            categories: {},    // Equipment categories
+            rooms: {},         // Rooms/locations
+            statuses: {},      // Equipment statuses
+            isLoaded: false
+        };
+
+        // Simulated data path
+        const DATA_PATH = 'Z:\\21. COPPHA';
         
-        // File upload handling
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                readExcelFile(file);
-            }
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupChatInput();
+            // Simulate loading data on startup
+            setTimeout(() => {
+                loadData();
+            }, 1000);
         });
         
-        function readExcelFile(file) {
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    
-                    // Get first sheet
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-                    
-                    // Extract headers and data
-                    headers = jsonData[0];
-                    inventoryData = jsonData.slice(1).map(row => {
-                        const obj = {};
-                        headers.forEach((header, index) => {
-                            obj[header] = row[index];
-                        });
-                        return obj;
-                    });
-                    
-                    // Update UI
-                    document.getElementById('fileStatus').innerHTML = `✅ Đã tải: ${file.name} (${inventoryData.length} mặt hàng)`;
-                    document.getElementById('fileStatus').classList.add('loaded');
-                    document.getElementById('chatInput').disabled = false;
-                    document.getElementById('sendBtn').disabled = false;
-                    document.getElementById('quickQuestions').style.display = 'flex';
-                    
-                    // Show success message
-                    addBotMessage(`Tuyệt vời! Tôi đã tải thành công file "${file.name}" với ${inventoryData.length} mặt hàng. 
-
-Một số thông tin tôi có thể trả lời:
-• Số lượng tồn kho của từng mặt hàng
-• Mặt hàng nào sắp hết hàng
-• Tổng giá trị tồn kho
-• Tìm kiếm mặt hàng theo mã hoặc tên
-
-Bạn muốn biết gì về kho hàng?`);
-                    
-                } catch (error) {
-                    alert('Lỗi khi đọc file: ' + error.message);
+        // Setup chat input
+        function setupChatInput() {
+            const chatInput = document.getElementById('chatInput');
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
                 }
+            });
+        }
+        
+        // Load data from directory (simulated)
+        function loadData() {
+            updateConnectionStatus('loading', 'Đang tải dữ liệu...');
+            
+            // Simulate loading data from directory
+            // In real implementation, this would connect to actual file system
+            setTimeout(() => {
+                // Simulated data - replace with actual file reading
+                simulateDataLoading();
+                
+                updateConnectionStatus('connected', 'Đã kết nối');
+                updateStats();
+                
+                addBotMessage(`✅ Đã tải thành công dữ liệu từ ${DATA_PATH}. Tìm thấy ${allData.files.length} file với tổng cộng ${allData.equipment.length} thiết bị.`);
+                
+                allData.isLoaded = true;
+            }, 2000);
+        }
+        
+        // Simulate data loading (replace with actual file system access)
+        function simulateDataLoading() {
+            // Clear existing data
+            allData = {
+                equipment: [],
+                files: [],
+                categories: {},
+                rooms: {},
+                statuses: {},
+                isLoaded: false
             };
             
-            reader.readAsArrayBuffer(file);
-        }
-        
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            
-            if (!message) return;
-            
-            // Add user message
-            addUserMessage(message);
-            
-            // Clear input
-            input.value = '';
-            
-            // Show typing indicator
-            showTypingIndicator();
-            
-            // Process message after delay
-            setTimeout(() => {
-                hideTypingIndicator();
-                processQuery(message);
-            }, 500);
-        }
-        
-        function processQuery(query) {
-            const lowerQuery = query.toLowerCase();
-            
-            // Check inventory quantity queries
-            if (lowerQuery.includes('số lượng') || lowerQuery.includes('tồn kho') || lowerQuery.includes('còn bao nhiêu')) {
-                checkInventoryQuantity(query);
-            }
-            // Check for low stock items
-            else if (lowerQuery.includes('sắp hết') || lowerQuery.includes('hết hàng') || lowerQuery.includes('cần nhập')) {
-                checkLowStock();
-            }
-            // Total inventory value
-            else if (lowerQuery.includes('giá trị') || lowerQuery.includes('tổng tiền')) {
-                calculateInventoryValue();
-            }
-            // Total items
-            else if (lowerQuery.includes('tổng số') || lowerQuery.includes('có bao nhiêu mặt hàng')) {
-                showTotalItems();
-            }
-            // Search for items
-            else if (lowerQuery.includes('tìm') || lowerQuery.includes('search')) {
-                searchItems(query);
-            }
-            // Show all items
-            else if (lowerQuery.includes('hiển thị') || lowerQuery.includes('xem tất cả')) {
-                showAllItems();
-            }
-            // Product details
-            else if (lowerQuery.includes('thông tin') || lowerQuery.includes('chi tiết')) {
-                showProductDetails(query);
-            }
-            else {
-                // Try to find product name in query
-                findProductInQuery(query);
-            }
-        }
-        
-        function checkInventoryQuantity(query) {
-            // Extract product name or code from query
-            const words = query.split(' ');
-            let foundItems = [];
-            
-            // Try to find product in inventory
-            inventoryData.forEach(item => {
-                const itemName = (item['Tên hàng'] || item['Tên sản phẩm'] || item['Product'] || '').toLowerCase();
-                const itemCode = (item['Mã hàng'] || item['Mã'] || item['SKU'] || item['Code'] || '').toLowerCase();
-                
-                words.forEach(word => {
-                    if (word.length > 2 && (itemName.includes(word.toLowerCase()) || itemCode.includes(word.toLowerCase()))) {
-                        foundItems.push(item);
-                    }
-                });
-            });
-            
-            // Remove duplicates
-            foundItems = [...new Set(foundItems)];
-            
-            if (foundItems.length === 0) {
-                addBotMessage('❌ Không tìm thấy mặt hàng nào phù hợp. Vui lòng thử lại với tên hoặc mã chính xác hơn.');
-            } else if (foundItems.length === 1) {
-                const item = foundItems[0];
-                const quantity = item['Số lượng'] || item['Số lượng tồn'] || item['Tồn kho'] || item['Quantity'] || 0;
-                const unit = item['Đơn vị'] || item['Unit'] || 'cái';
-                const name = item['Tên hàng'] || item['Tên sản phẩm'] || item['Product'];
-                const code = item['Mã hàng'] || item['Mã'] || item['SKU'] || item['Code'];
-                
-                let message = `📦 **${name}** (Mã: ${code})\n`;
-                message += `Số lượng tồn kho: **${quantity} ${unit}**\n\n`;
-                
-                if (quantity < 10) {
-                    message += `<div class="warning-message">⚠️ Cảnh báo: Sắp hết hàng!</div>`;
-                } else {
-                    message += `<div class="success-message">✅ Còn hàng</div>`;
+            // Simulated equipment data
+            const sampleData = [
+                {
+                    id: 'TB001',
+                    name: 'Máy tính Dell OptiPlex 7090',
+                    category: 'Máy tính',
+                    room: 'Phòng IT',
+                    status: 'Đang sử dụng',
+                    brand: 'Dell',
+                    model: 'OptiPlex 7090',
+                    serialNumber: 'DL7090001',
+                    purchaseDate: '2022-03-15',
+                    warranty: '2025-03-15',
+                    notes: 'Máy tính cho nhân viên IT',
+                    source: 'DanhSachMayTinh.xlsx'
+                },
+                {
+                    id: 'TB002',
+                    name: 'Máy in HP LaserJet Pro',
+                    category: 'Máy in',
+                    room: 'Phòng Kế toán',
+                    status: 'Đang sử dụng',
+                    brand: 'HP',
+                    model: 'LaserJet Pro M404dn',
+                    serialNumber: 'HP404001',
+                    purchaseDate: '2021-06-20',
+                    warranty: '2023-06-20',
+                    notes: 'Máy in laser đen trắng',
+                    source: 'ThietBiVanPhong.xlsx'
+                },
+                {
+                    id: 'TB003',
+                    name: 'Máy chiếu Epson EB-X51',
+                    category: 'Máy chiếu',
+                    room: 'Phòng họp 1',
+                    status: 'Đang sử dụng',
+                    brand: 'Epson',
+                    model: 'EB-X51',
+                    serialNumber: 'EP051001',
+                    purchaseDate: '2022-09-10',
+                    warranty: '2024-09-10',
+                    notes: 'Máy chiếu phòng họp lớn',
+                    source: 'ThietBiPhongHop.xlsx'
+                },
+                {
+                    id: 'TB004',
+                    name: 'Điều hòa Daikin 2HP',
+                    category: 'Điều hòa',
+                    room: 'Phòng Server',
+                    status: 'Đang sử dụng',
+                    brand: 'Daikin',
+                    model: 'FTXV50QVMV',
+                    serialNumber: 'DK2HP001',
+                    purchaseDate: '2020-05-15',
+                    warranty: '2025-05-15',
+                    notes: 'Điều hòa cho phòng server',
+                    source: 'ThietBiDienLanh.xlsx'
+                },
+                {
+                    id: 'TB005',
+                    name: 'Laptop ThinkPad X1 Carbon',
+                    category: 'Máy tính',
+                    room: 'Phòng Giám đốc',
+                    status: 'Đang sử dụng',
+                    brand: 'Lenovo',
+                    model: 'ThinkPad X1 Carbon Gen 9',
+                    serialNumber: 'LN001X1C',
+                    purchaseDate: '2023-01-10',
+                    warranty: '2026-01-10',
+                    notes: 'Laptop cao cấp cho lãnh đạo',
+                    source: 'DanhSachMayTinh.xlsx'
+                },
+                {
+                    id: 'TB006',
+                    name: 'Màn hình Dell 27"',
+                    category: 'Màn hình',
+                    room: 'Phòng Thiết kế',
+                    status: 'Đang bảo trì',
+                    brand: 'Dell',
+                    model: 'U2720Q',
+                    serialNumber: 'DLM27001',
+                    purchaseDate: '2021-08-20',
+                    warranty: '2024-08-20',
+                    notes: 'Màn hình 4K cho thiết kế',
+                    source: 'ThietBiVanPhong.xlsx'
                 }
-                
-                addBotMessage(message);
-            } else {
-                let message = `Tìm thấy ${foundItems.length} mặt hàng:\n\n`;
-                message += '<table class="data-table">';
-                message += '<tr><th>Mã hàng</th><th>Tên hàng</th><th>Tồn kho</th><th>Đơn vị</th></tr>';
-                
-                foundItems.slice(0, 10).forEach(item => {
-                    const quantity = item['Số lượng'] || item['Số lượng tồn'] || item['Tồn kho'] || 0;
-                    const unit = item['Đơn vị'] || 'cái';
-                    const name = item['Tên hàng'] || item['Tên sản phẩm'] || 'N/A';
-                    const code = item['Mã hàng'] || item['Mã'] || 'N/A';
-                    
-                    message += `<tr>`;
-                    message += `<td>${code}</td>`;
-                    message += `<td>${name}</td>`;
-                    message += `<td class="${quantity < 10 ? 'low-stock' : 'in-stock'}">${quantity}</td>`;
-                    message += `<td>${unit}</td>`;
-                    message += `</tr>`;
-                });
-                
-                message += '</table>';
-                
-                if (foundItems.length > 10) {
-                    message += `\n... và ${foundItems.length - 10} mặt hàng khác`;
+            ];
+            
+            // Add sample data
+            allData.equipment = sampleData;
+            
+            // Process categories, rooms, statuses
+            sampleData.forEach(item => {
+                if (item.category) {
+                    allData.categories[item.category] = (allData.categories[item.category] || 0) + 1;
                 }
-                
-                addBotMessage(message);
-            }
-        }
-        
-        function checkLowStock() {
-            const lowStockItems = inventoryData.filter(item => {
-                const quantity = parseInt(item['Số lượng'] || item['Số lượng tồn'] || item['Tồn kho'] || 0);
-                return quantity < 10; // Threshold for low stock
-            });
-            
-            if (lowStockItems.length === 0) {
-                addBotMessage('✅ Tin tốt! Không có mặt hàng nào sắp hết.');
-            } else {
-                let message = `⚠️ Có ${lowStockItems.length} mặt hàng sắp hết:\n\n`;
-                message += '<table class="data-table">';
-                message += '<tr><th>Mã hàng</th><th>Tên hàng</th><th>Còn lại</th><th>Đơn vị</th></tr>';
-                
-                lowStockItems.forEach(item => {
-                    const quantity = item['Số lượng'] || item['Số lượng tồn'] || item['Tồn kho'] || 0;
-                    const unit = item['Đơn vị'] || 'cái';
-                    const name = item['Tên hàng'] || item['Tên sản phẩm'] || 'N/A';
-                    const code = item['Mã hàng'] || item['Mã'] || 'N/A';
-                    
-                    message += `<tr>`;
-                    message += `<td>${code}</td>`;
-                    message += `<td>${name}</td>`;
-                    message += `<td class="low-stock">${quantity}</td>`;
-                    message += `<td>${unit}</td>`;
-                    message += `</tr>`;
-                });
-                
-                message += '</table>';
-                message += '\n<div class="warning-message">💡 Khuyến nghị: Nên đặt hàng bổ sung cho các mặt hàng này</div>';
-                
-                addBotMessage(message);
-            }
-        }
-        
-        function calculateInventoryValue() {
-            let totalValue = 0;
-            let itemsWithPrice = 0;
-            
-            inventoryData.forEach(item => {
-                const quantity = parseFloat(item['Số lượng'] || item['Số lượng tồn'] || item['Tồn kho'] || 0);
-                const price = parseFloat(item['Đơn giá'] || item['Giá'] || item['Price'] || 0);
-                
-                if (price > 0) {
-                    totalValue += quantity * price;
-                    itemsWithPrice++;
+                if (item.room) {
+                    allData.rooms[item.room] = (allData.rooms[item.room] || 0) + 1;
+                }
+                if (item.status) {
+                    allData.statuses[item.status] = (allData.statuses[item.status] || 0) + 1;
                 }
             });
             
-            if (itemsWithPrice === 0) {
-                addBotMessage('❌ Không tìm thấy thông tin giá trong file Excel. Vui lòng đảm bảo file có cột "Đơn giá" hoặc "Giá".');
-            } else {
-                let message = `💰 **Tổng giá trị tồn kho:**\n\n`;
-                message += `• Tổng giá trị: **${totalValue.toLocaleString('vi-VN')} VNĐ**\n`;
-                message += `• Số mặt hàng có giá: ${itemsWithPrice}/${inventoryData.length}\n`;
-                
-                if (itemsWithPrice < inventoryData.length) {
-                    message += `\n<div class="info-message">📌 Lưu ý: Có ${inventoryData.length - itemsWithPrice} mặt hàng chưa có thông tin giá</div>`;
-                }
-                
-                addBotMessage(message);
-            }
-        }
-        
-        function showTotalItems() {
-            const totalItems = inventoryData.length;
-            const totalQuantity = inventoryData.reduce((sum, item) => {
-                return sum + parseInt(item['Số lượng'] || item['Số lượng tồn'] || 0);
-            }, 0);
-            
-            let message = `📊 **Thống kê kho hàng:**\n\n`;
-            message += `• Tổng số mặt hàng: **${totalItems}**\n`;
-            message += `• Tổng số lượng: **${totalQuantity.toLocaleString('vi-VN')}** (tất cả mặt hàng)\n`;
-            
-            // Categories if available
-            const categories = [...new Set(inventoryData.map(item => item['Loại'] || item['Danh mục'] || item['Category']))];
-            if (categories.length > 1 && categories[0]) {
-                message += `• Số danh mục: ${categories.length}\n`;
-            }
-            
-            addBotMessage(message);
-        }
-        
-        function searchItems(query) {
-            const searchTerm = query.replace(/tìm|search|kiếm/gi, '').trim().toLowerCase();
-            
-            const results = inventoryData.filter(item => {
-                const searchableText = Object.values(item).join(' ').toLowerCase();
-                return searchableText.includes(searchTerm);
-            });
-            
-            if (results.length === 0) {
-                addBotMessage(`❌ Không tìm thấy kết quả nào cho "${searchTerm}"`);
-            } else {
-                let message = `🔍 Tìm thấy ${results.length} kết quả:\n\n`;
-                message += '<table class="data-table">';
-                message += '<tr><th>Mã</th><th>Tên hàng</th><th>Tồn kho</th></tr>';
-                
-                results.slice(0, 10).forEach(item => {
-                    const code = item['Mã hàng'] || item['Mã'] || 'N/A';
-                    const name = item['Tên hàng'] || item['Tên sản phẩm'] || 'N/A';
-                    const quantity = item['Số lượng'] || item['Số lượng tồn'] || 0;
-                    
-                    message += `<tr>`;
-                    message += `<td>${code}</td>`;
-                    message += `<td>${name}</td>`;
-                    message += `<td>${quantity}</td>`;
-                    message += `</tr>`;
-                });
-                
-                message += '</table>';
-                
-                if (results.length > 10) {
-                    message += `\n... và ${results.length - 10} kết quả khác`;
-                }
-                
-                addBotMessage(message);
-            }
-        }
-        
-        function showProductDetails(query) {
-            const productName = query.replace(/thông tin|chi tiết|về/gi, '').trim();
-            findProductInQuery(productName);
-        }
-        
-        function findProductInQuery(query) {
-            const words = query.toLowerCase().split(' ').filter(w => w.length > 2);
-            let bestMatch = null;
-            let maxScore = 0;
-            
-            inventoryData.forEach(item => {
-                let score = 0;
-                const itemText = Object.values(item).join(' ').toLowerCase();
-                
-                words.forEach(word => {
-                    if (itemText.includes(word)) {
-                        score++;
-                    }
-                });
-                
-                if (score > maxScore) {
-                    maxScore = score;
-                    bestMatch = item;
-                }
-            });
-            
-            if (bestMatch && maxScore > 0) {
-                showFullProductInfo(bestMatch);
-            } else {
-                addBotMessage('❓ Tôi không hiểu câu hỏi của bạn. Bạn có thể hỏi:\n• Số lượng tồn kho của [tên hàng]\n• Hàng nào sắp hết?\n• Tổng giá trị tồn kho?');
-            }
-        }
-        
-        function showFullProductInfo(item) {
-            let message = `📦 **Thông tin chi tiết:**\n\n`;
-            
-            // Show all available fields
-            Object.entries(item).forEach(([key, value]) => {
-                if (value) {
-                    message += `• ${key}: **${value}**\n`;
-                }
-            });
-            
-            const quantity = parseInt(item['Số lượng'] || item['Số lượng tồn'] || 0);
-            if (quantity < 10) {
-                message += '\n<div class="warning-message">⚠️ Mặt hàng này sắp hết!</div>';
-            }
-            
-            addBotMessage(message);
-        }
-        
-        function showAllItems() {
-            let message = '📋 **Danh sách tồn kho:**\n\n';
-            message += '<table class="data-table">';
-            message += '<tr>';
-            
-            // Show first 5 columns
-            const columnsToShow = headers.slice(0, 5);
-            columnsToShow.forEach(header => {
-                message += `<th>${header}</th>`;
-            });
-            message += '</tr>';
-            
-            // Show first 20 items
-            inventoryData.slice(0, 20).forEach(item =>
+            // Simulated file list
+            allData.files = [
+                { name: 'DanhSachMayTinh.xlsx', items: 2, size: '45 KB' },
+                { name: 'ThietBiVanPhong.xlsx', items: 2, size: '38 KB' },
+                { name: 'ThietBiPhongHop.xlsx', items: 1, size: '25 KB' },
+                { name: 'ThietBiDienLanh.xlsx',
