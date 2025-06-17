@@ -36,183 +36,23 @@
             padding: 20px;
         }
 
-        .app-container {
+        .chat-container {
             width: 100%;
-            max-width: 1200px;
-            height: 800px;
+            max-width: 600px;
+            height: 700px;
             background: var(--surface);
             border-radius: 16px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.08);
             display: flex;
+            flex-direction: column;
             overflow: hidden;
         }
 
-        /* Sidebar */
-        .sidebar {
-            width: 320px;
-            background: #fafbfc;
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .sidebar-header h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .data-source {
-            margin: 20px;
-            padding: 16px;
-            background: #f0f9ff;
-            border: 1px solid #bae6fd;
-            border-radius: 8px;
-        }
-
-        .data-source-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .data-source-icon {
-            font-size: 24px;
-        }
-
-        .data-source-title {
-            font-weight: 600;
-            color: #0369a1;
-        }
-
-        .data-source-path {
-            font-size: 13px;
-            color: #075985;
-            font-family: 'Consolas', 'Monaco', monospace;
-            background: white;
-            padding: 8px;
-            border-radius: 4px;
-            margin-top: 8px;
-        }
-
-        .connection-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 12px;
-            font-size: 13px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #22c55e;
-        }
-
-        .status-dot.error {
-            background: #ef4444;
-        }
-
-        .status-dot.loading {
-            background: #f59e0b;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .action-buttons {
-            margin: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .action-btn {
-            background: white;
-            border: 1px solid var(--border);
-            padding: 12px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .action-btn:hover {
-            background: #f8fafc;
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .action-btn-icon {
-            font-size: 20px;
-        }
-
-        .action-btn-text {
-            flex: 1;
-        }
-
-        .action-btn-title {
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .action-btn-desc {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-
-        .stats-container {
-            margin: 20px;
-            padding: 16px;
-            background: #f8faff;
-            border-radius: 8px;
-            border: 1px solid #e0e7ff;
-        }
-
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            margin-bottom: 8px;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-        }
-
-        .stat-value {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        /* Chat Area */
-        .chat-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
+        /* Chat Header */
         .chat-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 24px;
+            padding: 20px;
             display: flex;
             align-items: center;
             gap: 16px;
@@ -252,11 +92,17 @@
             animation: pulse 2s infinite;
         }
 
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Chat Messages */
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 24px;
-            background: #f8fafc;
+            padding: 20px;
+            background: #fafafa;
         }
 
         .message {
@@ -280,9 +126,9 @@
         }
 
         .message-wrapper {
-            max-width: 70%;
+            max-width: 80%;
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: flex-start;
         }
 
@@ -311,7 +157,7 @@
 
         .message-content {
             background: white;
-            padding: 14px 18px;
+            padding: 12px 16px;
             border-radius: 16px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
@@ -334,7 +180,7 @@
         .message-time {
             font-size: 12px;
             color: var(--text-secondary);
-            margin-top: 6px;
+            margin-top: 4px;
         }
 
         .message.user .message-time {
@@ -348,14 +194,13 @@
             width: 100%;
             font-size: 13px;
             background: white;
-            border-radius: 8px;
+            border-radius: 6px;
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .data-table th, .data-table td {
             border: 1px solid var(--border);
-            padding: 10px 12px;
+            padding: 8px 12px;
             text-align: left;
         }
 
@@ -479,7 +324,7 @@
 
         .chat-input {
             flex: 1;
-            padding: 14px 20px;
+            padding: 12px 20px;
             border: 2px solid var(--border);
             border-radius: 24px;
             font-size: 15px;
@@ -515,16 +360,11 @@
             transform: scale(0.95);
         }
 
-        .send-btn:disabled {
-            background: var(--text-secondary);
-            cursor: not-allowed;
-        }
-
         /* Loading animation */
         .typing-indicator {
             display: flex;
             gap: 4px;
-            padding: 14px 18px;
+            padding: 12px 16px;
             background: white;
             border-radius: 16px;
             border-bottom-left-radius: 4px;
@@ -554,19 +394,11 @@
         }
 
         /* Mobile responsive */
-        @media (max-width: 768px) {
-            .app-container {
-                flex-direction: column;
+        @media (max-width: 600px) {
+            .chat-container {
                 height: 100vh;
                 max-width: 100%;
                 border-radius: 0;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: 300px;
-                border-right: none;
-                border-bottom: 1px solid var(--border);
             }
             
             .message-wrapper {
@@ -576,175 +408,190 @@
 
         /* Scrollbar styling */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--background);
+            background: transparent;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--text-secondary);
-            border-radius: 4px;
+            background: #cbd5e1;
+            border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--text);
+            background: #94a3b8;
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h2>📚 Phòng Thiết Bị - Kho Dữ Liệu</h2>
-            </div>
-            
-            <div class="data-source">
-                <div class="data-source-header">
-                    <span class="data-source-icon">💾</span>
-                    <span class="data-source-title">Nguồn dữ liệu</span>
-                </div>
-                <div class="data-source-path">Z:\21. COPPHA</div>
-                <div class="connection-status">
-                    <span class="status-dot" id="connectionStatus"></span>
-                    <span id="connectionText">Đang kết nối...</span>
-                </div>
-            </div>
-            
-            <div class="action-buttons">
-                <button class="action-btn" onclick="loadData()">
-                    <span class="action-btn-icon">🔄</span>
-                    <div class="action-btn-text">
-                        <div class="action-btn-title">Tải lại dữ liệu</div>
-                        <div class="action-btn-desc">Cập nhật từ thư mục</div>
-                    </div>
-                </button>
-                
-                <button class="action-btn" onclick="showFileList()">
-                    <span class="action-btn-icon">📁</span>
-                    <div class="action-btn-text">
-                        <div class="action-btn-title">Xem danh sách file</div>
-                        <div class="action-btn-desc">Các file Excel/PDF</div>
-                    </div>
-                </button>
-                
-                <button class="action-btn" onclick="exportReport()">
-                    <span class="action-btn-icon">📊</span>
-                    <div class="action-btn-text">
-                        <div class="action-btn-title">Xuất báo cáo</div>
-                        <div class="action-btn-desc">Tạo file tổng hợp</div>
-                    </div>
-                </button>
-            </div>
-            
-            <div class="stats-container" id="statsContainer">
-                <div class="stat-item">
-                    <span class="stat-label">Tổng file dữ liệu:</span>
-                    <span class="stat-value" id="totalFiles">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Tổng thiết bị:</span>
-                    <span class="stat-value" id="totalEquipment">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Phòng/Khu vực:</span>
-                    <span class="stat-value" id="totalRooms">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Cập nhật lần cuối:</span>
-                    <span class="stat-value" id="lastUpdate">-</span>
+    <div class="chat-container">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <div class="bot-avatar">🤖</div>
+            <div class="bot-info">
+                <h1>Phòng Thiết Bị</h1>
+                <div class="bot-status">
+                    <span class="status-indicator"></span>
+                    <span>Trợ lý AI đang sẵn sàng</span>
                 </div>
             </div>
         </div>
         
-        <!-- Chat Area -->
-        <div class="chat-area">
-            <div class="chat-header">
-                <div class="bot-avatar">🤖</div>
-                <div class="bot-info">
-                    <h1>Trợ Lý Phòng Thiết Bị AI</h1>
-                    <div class="bot-status">
-                        <span class="status-indicator"></span>
-                        <span id="botStatus">Sẵn sàng hỗ trợ</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot">
-                    <div class="message-wrapper">
-                        <div class="message-avatar">🤖</div>
-                        <div class="message-content">
-                            <div class="message-text">
-                                Xin chào! Tôi là trợ lý AI của Phòng Thiết Bị. Tôi có thể giúp bạn:
-                                <ul style="margin-top: 8px; margin-left: 20px;">
-                                    <li>Tra cứu thông tin thiết bị từ kho dữ liệu</li>
-                                    <li>Kiểm tra tình trạng và vị trí thiết bị</li>
-                                    <li>Tìm kiếm theo mã, tên, phòng</li>
-                                    <li>Thống kê và báo cáo thiết bị</li>
-                                    <li>Tra cứu lịch sử bảo trì</li>
-                                </ul>
-                                <div class="alert info" style="margin-top: 12px;">
-                                    💡 Đang kết nối với thư mục dữ liệu Z:\21. COPPHA
-                                </div>
-                            </div>
-                            <div class="message-time">Vừa xong</div>
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-wrapper">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-text">
+                            Xin chào! Tôi có thể giúp bạn tra cứu thông tin về thiết bị. Hãy hỏi tôi về:
+                            <ul style="margin-top: 8px; margin-left: 20px;">
+                                <li>Thông tin chi tiết thiết bị</li>
+                                <li>Tình trạng và vị trí thiết bị</li>
+                                <li>Lịch bảo trì, sửa chữa</li>
+                                <li>Thống kê theo phòng, loại thiết bị</li>
+                            </ul>
                         </div>
+                        <div class="message-time">9:00 SA</div>
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Chat Input -->
+        <div class="chat-input-area">
+            <div class="suggestions" id="suggestions">
+                <button class="suggestion-chip" onclick="askQuestion('Máy tính phòng IT')">Máy tính phòng IT</button>
+                <button class="suggestion-chip" onclick="askQuestion('Thiết bị cần bảo trì')">Cần bảo trì</button>
+                <button class="suggestion-chip" onclick="askQuestion('Danh sách máy in')">Máy in</button>
+                <button class="suggestion-chip" onclick="askQuestion('Thiết bị phòng họp')">Phòng họp</button>
+            </div>
             
-            <div class="chat-input-area">
-                <div class="suggestions" id="suggestions">
-                    <button class="suggestion-chip" onclick="askQuestion('Có bao nhiêu thiết bị?')">Tổng số thiết bị</button>
-                    <button class="suggestion-chip" onclick="askQuestion('Thiết bị phòng họp')">Thiết bị phòng họp</button>
-                    <button class="suggestion-chip" onclick="askQuestion('Máy tính còn bảo hành')">Máy còn bảo hành</button>
-                    <button class="suggestion-chip" onclick="askQuestion('Thiết bị cần sửa chữa')">Cần sửa chữa</button>
-                </div>
-                
-                <div class="input-wrapper">
-                    <input type="text" 
-                           id="chatInput" 
-                           class="chat-input" 
-                           placeholder="Hỏi về thiết bị, phòng, tình trạng..." 
-                           >
-                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-                        </svg>
-                    </button>
-                </div>
+            <div class="input-wrapper">
+                <input type="text" 
+                       id="chatInput" 
+                       class="chat-input" 
+                       placeholder="Hỏi về thiết bị..." 
+                       >
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    
     <script>
-        // Global data storage
-        let allData = {
-            equipment: [],      // All equipment data
-            files: [],         // Files info
-            categories: {},    // Equipment categories
-            rooms: {},         // Rooms/locations
-            statuses: {},      // Equipment statuses
-            isLoaded: false
-        };
+        // Sample equipment data
+        const equipmentData = [
+            {
+                id: 'TB001',
+                name: 'Máy tính Dell OptiPlex 7090',
+                category: 'Máy tính',
+                room: 'Phòng IT',
+                status: 'Đang sử dụng',
+                brand: 'Dell',
+                model: 'OptiPlex 7090',
+                serialNumber: 'DL7090001',
+                purchaseDate: '2022-03-15',
+                warranty: '2025-03-15',
+                user: 'Nguyễn Văn A'
+            },
+            {
+                id: 'TB002',
+                name: 'Máy in HP LaserJet Pro',
+                category: 'Máy in',
+                room: 'Phòng Kế toán',
+                status: 'Đang sử dụng',
+                brand: 'HP',
+                model: 'LaserJet Pro M404dn',
+                serialNumber: 'HP404001',
+                purchaseDate: '2021-06-20',
+                warranty: '2023-06-20'
+            },
+            {
+                id: 'TB003',
+                name: 'Máy chiếu Epson EB-X51',
+                category: 'Máy chiếu',
+                room: 'Phòng họp 1',
+                status: 'Đang sử dụng',
+                brand: 'Epson',
+                model: 'EB-X51',
+                serialNumber: 'EP051001',
+                purchaseDate: '2022-09-10',
+                warranty: '2024-09-10'
+            },
+            {
+                id: 'TB004',
+                name: 'Điều hòa Daikin 2HP',
+                category: 'Điều hòa',
+                room: 'Phòng Server',
+                status: 'Đang sử dụng',
+                brand: 'Daikin',
+                model: 'FTXV50QVMV',
+                serialNumber: 'DK2HP001',
+                purchaseDate: '2020-05-15',
+                warranty: '2025-05-15'
+            },
+            {
+                id: 'TB005',
+                name: 'Laptop ThinkPad X1 Carbon',
+                category: 'Máy tính',
+                room: 'Phòng Giám đốc',
+                status: 'Đang sử dụng',
+                brand: 'Lenovo',
+                model: 'ThinkPad X1 Carbon Gen 9',
+                serialNumber: 'LN001X1C',
+                purchaseDate: '2023-01-10',
+                warranty: '2026-01-10',
+                user: 'Trần Thị B'
+            },
+            {
+                id: 'TB006',
+                name: 'Màn hình Dell 27"',
+                category: 'Màn hình',
+                room: 'Phòng Thiết kế',
+                status: 'Đang bảo trì',
+                brand: 'Dell',
+                model: 'U2720Q',
+                serialNumber: 'DLM27001',
+                purchaseDate: '2021-08-20',
+                warranty: '2024-08-20',
+                maintenanceDate: '2024-01-15'
+            },
+            {
+                id: 'TB007',
+                name: 'Máy in Canon LBP223dw',
+                category: 'Máy in',
+                room: 'Phòng IT',
+                status: 'Đang sử dụng',
+                brand: 'Canon',
+                model: 'LBP223dw',
+                serialNumber: 'CN223001',
+                purchaseDate: '2023-05-10',
+                warranty: '2025-05-10'
+            },
+            {
+                id: 'TB008',
+                name: 'Bàn phím cơ Logitech',
+                category: 'Phụ kiện',
+                room: 'Phòng IT',
+                status: 'Hỏng',
+                brand: 'Logitech',
+                model: 'G512',
+                serialNumber: 'LG512001',
+                purchaseDate: '2022-11-20',
+                warranty: '2023-11-20',
+                damageDate: '2024-01-10'
+            }
+        ];
 
-        // Simulated data path
-        const DATA_PATH = 'Z:\\21. COPPHA';
-        
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             setupChatInput();
-            // Simulate loading data on startup
-            setTimeout(() => {
-                loadData();
-            }, 1000);
         });
         
         // Setup chat input
@@ -756,146 +603,268 @@
                     sendMessage();
                 }
             });
+            chatInput.focus();
         }
         
-        // Load data from directory (simulated)
-        function loadData() {
-            updateConnectionStatus('loading', 'Đang tải dữ liệu...');
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
             
-            // Simulate loading data from directory
-            // In real implementation, this would connect to actual file system
+            if (!message) return;
+            
+            // Add user message
+            addUserMessage(message);
+            
+            // Clear input
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Process message after delay
             setTimeout(() => {
-                // Simulated data - replace with actual file reading
-                simulateDataLoading();
-                
-                updateConnectionStatus('connected', 'Đã kết nối');
-                updateStats();
-                
-                addBotMessage(`✅ Đã tải thành công dữ liệu từ ${DATA_PATH}. Tìm thấy ${allData.files.length} file với tổng cộng ${allData.equipment.length} thiết bị.`);
-                
-                allData.isLoaded = true;
-            }, 2000);
+                hideTypingIndicator();
+                processQuery(message);
+            }, 800);
         }
         
-        // Simulate data loading (replace with actual file system access)
-        function simulateDataLoading() {
-            // Clear existing data
-            allData = {
-                equipment: [],
-                files: [],
-                categories: {},
-                rooms: {},
-                statuses: {},
-                isLoaded: false
-            };
+        // Process user query
+        function processQuery(query) {
+            const lowerQuery = query.toLowerCase();
             
-            // Simulated equipment data
-            const sampleData = [
-                {
-                    id: 'TB001',
-                    name: 'Máy tính Dell OptiPlex 7090',
-                    category: 'Máy tính',
-                    room: 'Phòng IT',
-                    status: 'Đang sử dụng',
-                    brand: 'Dell',
-                    model: 'OptiPlex 7090',
-                    serialNumber: 'DL7090001',
-                    purchaseDate: '2022-03-15',
-                    warranty: '2025-03-15',
-                    notes: 'Máy tính cho nhân viên IT',
-                    source: 'DanhSachMayTinh.xlsx'
-                },
-                {
-                    id: 'TB002',
-                    name: 'Máy in HP LaserJet Pro',
-                    category: 'Máy in',
-                    room: 'Phòng Kế toán',
-                    status: 'Đang sử dụng',
-                    brand: 'HP',
-                    model: 'LaserJet Pro M404dn',
-                    serialNumber: 'HP404001',
-                    purchaseDate: '2021-06-20',
-                    warranty: '2023-06-20',
-                    notes: 'Máy in laser đen trắng',
-                    source: 'ThietBiVanPhong.xlsx'
-                },
-                {
-                    id: 'TB003',
-                    name: 'Máy chiếu Epson EB-X51',
-                    category: 'Máy chiếu',
-                    room: 'Phòng họp 1',
-                    status: 'Đang sử dụng',
-                    brand: 'Epson',
-                    model: 'EB-X51',
-                    serialNumber: 'EP051001',
-                    purchaseDate: '2022-09-10',
-                    warranty: '2024-09-10',
-                    notes: 'Máy chiếu phòng họp lớn',
-                    source: 'ThietBiPhongHop.xlsx'
-                },
-                {
-                    id: 'TB004',
-                    name: 'Điều hòa Daikin 2HP',
-                    category: 'Điều hòa',
-                    room: 'Phòng Server',
-                    status: 'Đang sử dụng',
-                    brand: 'Daikin',
-                    model: 'FTXV50QVMV',
-                    serialNumber: 'DK2HP001',
-                    purchaseDate: '2020-05-15',
-                    warranty: '2025-05-15',
-                    notes: 'Điều hòa cho phòng server',
-                    source: 'ThietBiDienLanh.xlsx'
-                },
-                {
-                    id: 'TB005',
-                    name: 'Laptop ThinkPad X1 Carbon',
-                    category: 'Máy tính',
-                    room: 'Phòng Giám đốc',
-                    status: 'Đang sử dụng',
-                    brand: 'Lenovo',
-                    model: 'ThinkPad X1 Carbon Gen 9',
-                    serialNumber: 'LN001X1C',
-                    purchaseDate: '2023-01-10',
-                    warranty: '2026-01-10',
-                    notes: 'Laptop cao cấp cho lãnh đạo',
-                    source: 'DanhSachMayTinh.xlsx'
-                },
-                {
-                    id: 'TB006',
-                    name: 'Màn hình Dell 27"',
-                    category: 'Màn hình',
-                    room: 'Phòng Thiết kế',
-                    status: 'Đang bảo trì',
-                    brand: 'Dell',
-                    model: 'U2720Q',
-                    serialNumber: 'DLM27001',
-                    purchaseDate: '2021-08-20',
-                    warranty: '2024-08-20',
-                    notes: 'Màn hình 4K cho thiết kế',
-                    source: 'ThietBiVanPhong.xlsx'
-                }
-            ];
+            // Search by room
+            if (lowerQuery.includes('phòng')) {
+                searchByRoom(query);
+            }
+            // Search by category
+            else if (lowerQuery.includes('máy tính') || lowerQuery.includes('laptop')) {
+                searchByCategory('Máy tính');
+            }
+            else if (lowerQuery.includes('máy in')) {
+                searchByCategory('Máy in');
+            }
+            else if (lowerQuery.includes('máy chiếu')) {
+                searchByCategory('Máy chiếu');
+            }
+            // Search by status
+            else if (lowerQuery.includes('bảo trì') || lowerQuery.includes('sửa')) {
+                searchByStatus('Đang bảo trì');
+            }
+            else if (lowerQuery.includes('hỏng')) {
+                searchByStatus('Hỏng');
+            }
+            // Search by warranty
+            else if (lowerQuery.includes('bảo hành') || lowerQuery.includes('warranty')) {
+                checkWarranty();
+            }
+            // General statistics
+            else if (lowerQuery.includes('thống kê') || lowerQuery.includes('tổng')) {
+                showStatistics();
+            }
+            // Search by ID or name
+            else {
+                searchByKeyword(query);
+            }
+        }
+        
+        // Search functions
+        function searchByRoom(query) {
+            const rooms = [...new Set(equipmentData.map(e => e.room))];
+            let foundRoom = null;
             
-            // Add sample data
-            allData.equipment = sampleData;
-            
-            // Process categories, rooms, statuses
-            sampleData.forEach(item => {
-                if (item.category) {
-                    allData.categories[item.category] = (allData.categories[item.category] || 0) + 1;
-                }
-                if (item.room) {
-                    allData.rooms[item.room] = (allData.rooms[item.room] || 0) + 1;
-                }
-                if (item.status) {
-                    allData.statuses[item.status] = (allData.statuses[item.status] || 0) + 1;
+            rooms.forEach(room => {
+                if (query.toLowerCase().includes(room.toLowerCase())) {
+                    foundRoom = room;
                 }
             });
             
-            // Simulated file list
-            allData.files = [
-                { name: 'DanhSachMayTinh.xlsx', items: 2, size: '45 KB' },
-                { name: 'ThietBiVanPhong.xlsx', items: 2, size: '38 KB' },
-                { name: 'ThietBiPhongHop.xlsx', items: 1, size: '25 KB' },
-                { name: 'ThietBiDienLanh.xlsx',
+            if (foundRoom) {
+                const items = equipmentData.filter(e => e.room === foundRoom);
+                let response = `📍 **${foundRoom}** có ${items.length} thiết bị:\n\n`;
+                
+                response += '<table class="data-table">';
+                response += '<tr><th>Mã TB</th><th>Tên thiết bị</th><th>Trạng thái</th></tr>';
+                
+                items.forEach(item => {
+                    const statusBadge = getStatusBadge(item.status);
+                    response += `<tr>`;
+                    response += `<td>${item.id}</td>`;
+                    response += `<td>${item.name}</td>`;
+                    response += `<td>${statusBadge}</td>`;
+                    response += `</tr>`;
+                });
+                
+                response += '</table>';
+                
+                addBotMessage(response);
+            } else {
+                addBotMessage('❌ Không tìm thấy phòng phù hợp. Vui lòng thử lại.');
+            }
+        }
+        
+        function searchByCategory(category) {
+            const items = equipmentData.filter(e => e.category === category);
+            
+            if (items.length > 0) {
+                let response = `📦 Tìm thấy ${items.length} ${category.toLowerCase()}:\n\n`;
+                
+                response += '<table class="data-table">';
+                response += '<tr><th>Mã TB</th><th>Tên</th><th>Phòng</th><th>Trạng thái</th></tr>';
+                
+                items.forEach(item => {
+                    const statusBadge = getStatusBadge(item.status);
+                    response += `<tr>`;
+                    response += `<td>${item.id}</td>`;
+                    response += `<td>${item.name}</td>`;
+                    response += `<td>${item.room}</td>`;
+                    response += `<td>${statusBadge}</td>`;
+                    response += `</tr>`;
+                });
+                
+                response += '</table>';
+                
+                addBotMessage(response);
+            } else {
+                addBotMessage(`❌ Không tìm thấy ${category.toLowerCase()} nào.`);
+            }
+        }
+        
+        function searchByStatus(status) {
+            const items = equipmentData.filter(e => e.status === status);
+            
+            if (items.length > 0) {
+                let response = `🔧 Thiết bị ${status.toLowerCase()} (${items.length}):\n\n`;
+                
+                items.forEach(item => {
+                    response += `• **${item.name}** (${item.id})\n`;
+                    response += `  - Phòng: ${item.room}\n`;
+                    if (item.maintenanceDate) {
+                        response += `  - Ngày bảo trì: ${formatDate(item.maintenanceDate)}\n`;
+                    }
+                    if (item.damageDate) {
+                        response += `  - Ngày hỏng: ${formatDate(item.damageDate)}\n`;
+                    }
+                    response += '\n';
+                });
+                
+                addBotMessage(response);
+            } else {
+                addBotMessage(`✅ Không có thiết bị nào ${status.toLowerCase()}.`);
+            }
+        }
+        
+        function checkWarranty() {
+            const today = new Date();
+            const warrantyItems = equipmentData.filter(item => {
+                if (item.warranty) {
+                    const warrantyDate = new Date(item.warranty);
+                    return warrantyDate >= today;
+                }
+                return false;
+            });
+            
+            let response = `🛡️ Thiết bị còn bảo hành (${warrantyItems.length}):\n\n`;
+            
+            response += '<table class="data-table">';
+            response += '<tr><th>Thiết bị</th><th>Hết hạn BH</th><th>Còn lại</th></tr>';
+            
+            warrantyItems.forEach(item => {
+                const warrantyDate = new Date(item.warranty);
+                const daysLeft = Math.floor((warrantyDate - today) / (1000 * 60 * 60 * 24));
+                
+                response += `<tr>`;
+                response += `<td>${item.name}</td>`;
+                response += `<td>${formatDate(item.warranty)}</td>`;
+                response += `<td>${daysLeft} ngày</td>`;
+                response += `</tr>`;
+            });
+            
+            response += '</table>';
+            
+            addBotMessage(response);
+        }
+        
+        function showStatistics() {
+            const stats = {
+                total: equipmentData.length,
+                byStatus: {},
+                byCategory: {},
+                byRoom: {}
+            };
+            
+            equipmentData.forEach(item => {
+                stats.byStatus[item.status] = (stats.byStatus[item.status] || 0) + 1;
+                stats.byCategory[item.category] = (stats.byCategory[item.category] || 0) + 1;
+                stats.byRoom[item.room] = (stats.byRoom[item.room] || 0) + 1;
+            });
+            
+            let response = `📊 **Thống kê tổng quan:**\n\n`;
+            response += `Tổng số thiết bị: **${stats.total}**\n\n`;
+            
+            response += `**Theo trạng thái:**\n`;
+            Object.entries(stats.byStatus).forEach(([status, count]) => {
+                response += `• ${status}: ${count}\n`;
+            });
+            
+            response += `\n**Theo loại:**\n`;
+            Object.entries(stats.byCategory).forEach(([category, count]) => {
+                response += `• ${category}: ${count}\n`;
+            });
+            
+            response += `\n**Theo phòng:**\n`;
+            Object.entries(stats.byRoom).forEach(([room, count]) => {
+                response += `• ${room}: ${count}\n`;
+            });
+            
+            addBotMessage(response);
+        }
+        
+        function searchByKeyword(keyword) {
+            const lowerKeyword = keyword.toLowerCase();
+            const results = equipmentData.filter(item => {
+                return item.id.toLowerCase().includes(lowerKeyword) ||
+                       item.name.toLowerCase().includes(lowerKeyword) ||
+                       item.brand.toLowerCase().includes(lowerKeyword) ||
+                       item.model.toLowerCase().includes(lowerKeyword);
+            });
+            
+            if (results.length === 0) {
+                addBotMessage('❌ Không tìm thấy thiết bị phù hợp. Thử tìm theo mã, tên, hoặc phòng.');
+            } else if (results.length === 1) {
+                showDetailedInfo(results[0]);
+            } else {
+                let response = `🔍 Tìm thấy ${results.length} kết quả:\n\n`;
+                results.forEach(item => {
+                    response += `• **${item.name}** (${item.id}) - ${item.room}\n`;
+                });
+                response += '\n💡 Nhập mã thiết bị để xem chi tiết.';
+                addBotMessage(response);
+            }
+        }
+        
+        function showDetailedInfo(item) {
+            let response = `📋 **Thông tin chi tiết thiết bị:**\n\n`;
+            response += `**${item.name}**\n\n`;
+            response += `• Mã TB: ${item.id}\n`;
+            response += `• Loại: ${item.category}\n`;
+            response += `• Hãng: ${item.brand}\n`;
+            response += `• Model: ${item.model}\n`;
+            response += `• Serial: ${item.serialNumber}\n`;
+            response += `• Phòng: ${item.room}\n`;
+            response += `• Trạng thái: ${getStatusBadge(item.status)}\n`;
+            response += `• Ngày mua: ${formatDate(item.purchaseDate)}\n`;
+            response += `• Bảo hành đến: ${formatDate(item.warranty)}\n`;
+            
+            if (item.user) {
+                response += `• Người sử dụng: ${item.user}\n`;
+            }
+            
+            // Check warranty status
+            const today = new Date();
+            const warrantyDate = new Date(item.warranty);
+            if (warrantyDate >= today) {
+                const daysLeft = Math.floor((warrantyDate - today) / (1000 * 60 * 60 * 24));
+                response += `\n<div class="alert success">✅ Còn bảo hành (${daysLeft} ngày)</div>`;
+            } else {
+                response += `\n
